@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pm="http://primefaces.org/mobile"
+	template="/WEB-INF/templates/default.xhtml">
+
+	<ui:define name="content">
+		<h1>
+			<h:messages styleClass="messages" errorClass="invalid"
+				infoClass="valid" warnClass="warning" globalOnly="true" />
+		</h1>
+
+		<h:panelGroup rendered="#{empty mesas}">
+			<em>Sem mesas registradas</em>
+		</h:panelGroup>
+
+		<h:form id="form" style="width: 70%; margin: 0 auto;">
+			<p:dataGrid var="mesa" value="#{mesas}" columns="4" layout="grid"
+				rows="12" paginator="true" id="gridMesas"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				rowsPerPageTemplate="4,8,12,16,20" style="width: 100%">
+
+				<f:facet name="header">
+            Mesas
+        </f:facet>
+
+
+				<p:panel header="Mesa #{mesa.idMesa}" style="text-align:center"
+					id="panelG">
+					<h:panelGrid columns="1"
+						style="width:100%; background-color: #{mesa.status ? 'green' : 'red'};">
+						<p:graphicImage name="gfx/icon_table.gif" />
+
+						<h:outputText value="#{mesa.status ? 'LIVRE' : 'OCUPADA'}" />
+
+						<p:commandButton id="abrirMesaBtn"
+							value="#{mesa.status ? 'Abrir Mesa' : 'Fechar Mesa'}"
+							action="${mesaController.abreFechaMesa(mesa)}"
+							onsuccess="PF('notaDialog').show()" style="width:145px"
+							update=":form:gridMesas">
+							<f:setPropertyActionListener value="#{mesa}"
+								target="#{selectedMesa}" />
+						</p:commandButton>
+
+						<p:commandLink update=":mesaDetail" rendered="#{!mesa.status}"
+							oncomplete="PF('mesaDialog').show()" title="View Detail">
+							<h:outputText styleClass="ui-icon ui-icon-search"
+								style="margin:0 auto;" />
+							<f:setPropertyActionListener value="#{mesa}"
+								target="#{selectedMesa}" />
+						</p:commandLink>
+
+						<p:commandLink update=":mesaDetail"
+							oncomplete="PF('mesaDialog').show()" title="View Detail">
+							<h:outputText styleClass="ui-icon ui-icon-search"
+								style="margin:0 auto;" />
+							<f:setPropertyActionListener value="#{mesa}"
+								target="#{selectedMesa}" />
+						</p:commandLink>
+					</h:panelGrid>
+				</p:panel>
+
+			</p:dataGrid>
+
+		</h:form>
+
+		<p:dialog header="Adicionar Pedido" widgetVar="mesaDialog"
+			modal="true" showEffect="fade" hideEffect="fade" resizable="false"
+			appendTo="@(body)">
+			<p:outputPanel id="mesaDetail" style="text-align:center;">
+				<p:panelGrid columns="2" rendered="#{not empty selectedMesa}">
+					<f:facet name="header">
+							Mesa #{selectedMesa.idMesa}
+						</f:facet>
+
+					<h:outputText value="Status:" />
+					<h:outputText value="#{selectedMesa.status ? 'LIVRE' : 'OCUPADA'}" />
+				</p:panelGrid>
+			</p:outputPanel>
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

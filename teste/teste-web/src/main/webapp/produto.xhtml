@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pm="http://primefaces.org/mobile"
+	template="/WEB-INF/templates/default.xhtml">
+
+	<ui:define name="content">
+		<h2>Produtos</h2>
+		<h:panelGroup rendered="#{empty produtos}">
+			<em>Sem produtos registrados</em>
+		</h:panelGroup>
+		<p:dataTable var="produto" value="#{produtos}"
+			rendered="#{not empty produtos}" rows="5" paginator="true">
+			<p:column headerText="Id">
+                #{produto.idProduto}
+            </p:column>
+			<p:column headerText="NOME" field="#{produto.nome}">
+                #{produto.nome}
+            </p:column>
+			<p:column headerText="Categoria">
+                #{produto.categoria.nome} / #{produto.tamanhos.size()}
+            </p:column>
+            <p:columns var="tamanhos" value="#{produto.tamanhos}" headerText="Tamanhos">
+            <p:column headerText="Tamanho" field="#{tamanhos.tamanho.nome}">
+            </p:column>
+            </p:columns>
+		</p:dataTable>
+	</ui:define>
+</ui:composition>
