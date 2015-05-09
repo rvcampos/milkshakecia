@@ -3,6 +3,7 @@ package br.comvizzatech.teste.model.produtos;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -16,6 +17,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @IdClass(ProdutoSaborPkey.class)
 @XmlRootElement
 @Table(name = "\"PRODUTO_SABOR\"", schema = "milkshakecia")
+@Cacheable(true)
 public class ProdutoSabor implements Serializable{
 
 	private static final long serialVersionUID = -643739859553578881L;

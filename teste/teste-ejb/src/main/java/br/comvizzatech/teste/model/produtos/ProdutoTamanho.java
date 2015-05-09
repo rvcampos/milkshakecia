@@ -3,18 +3,22 @@ package br.comvizzatech.teste.model.produtos;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import javax.persistence.Cacheable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.DecimalMax;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
 @Table(name = "\"PRODUTO_TAMANHO\"")
 @XmlRootElement
 @IdClass(ProdutoTamanhoPkey.class)
+@Cacheable(true)
 public class ProdutoTamanho implements Serializable{
 
 	
@@ -30,6 +34,7 @@ public class ProdutoTamanho implements Serializable{
 	@OneToOne
 	@JoinColumn(name = "id_tamanho")
 	private Tamanho tamanho;
+	@Column(precision=2)
 	private BigDecimal preco;
 	private Integer medida;
 
@@ -63,6 +68,16 @@ public class ProdutoTamanho implements Serializable{
 
 	public void setMedida(Integer medida) {
 		this.medida = medida;
+	}
+	
+	public boolean printPreco()
+	{
+		return getPreco() != null && BigDecimal.ONE.compareTo(BigDecimal.ZERO) == 1;
+	}
+	
+	public String getPrecoStr()
+	{
+		return printPreco() ? "R$ " + getPreco().toString() : ""; 
 	}
 
 }

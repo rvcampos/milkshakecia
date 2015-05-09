@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -22,6 +23,7 @@ import br.comvizzatech.teste.model.Categoria;
 @Entity
 @XmlRootElement
 @Table(name = "\"PRODUTO\"")
+@Cacheable(true)
 public class Produto implements Serializable {
 
 	/**
@@ -46,6 +48,10 @@ public class Produto implements Serializable {
 	@OrderBy("tamanho")
 	@JoinColumn(name = "id_Produto", nullable = false, insertable = false, updatable = false, referencedColumnName = "id_produto")
 	private List<ProdutoTamanho> tamanhos;
+
+	@OneToMany(fetch = EAGER)
+	@JoinColumn(name = "\"ID_PRODUTO\"", nullable = false, insertable = false, updatable = false, referencedColumnName = "id_produto")
+	private List<ProdutoProdutoAdicional> produtosAdicionais;
 
 	@Column(name = "qtd_adicional_incluso")
 	private Short qtdAdicionalIncluso;
@@ -116,30 +122,47 @@ public class Produto implements Serializable {
 	public void setPrecoAdicional(BigDecimal precoAdicional) {
 		this.precoAdicional = precoAdicional;
 	}
-	
-	public ProdutoTamanho getTamanhoInfoByTamanho(Tamanho tamanho)
-	{
-		if(tamanho != null && this.getTamanhos() != null)
-		{
-			for(ProdutoTamanho produtoTamanho : this.getTamanhos())
-			{
-				if(produtoTamanho.getTamanho().getIdTamanho().equals(tamanho.getIdTamanho()))
-				{
+
+	public ProdutoTamanho getTamanhoInfoByTamanho(Tamanho tamanho) {
+		if (tamanho != null && this.getTamanhos() != null) {
+			for (ProdutoTamanho produtoTamanho : this.getTamanhos()) {
+				if (produtoTamanho.getTamanho().getIdTamanho()
+						.equals(tamanho.getIdTamanho())) {
 					return produtoTamanho;
 				}
 			}
 		}
 		return null;
 	}
+	public ProdutoTamanho getTamanhoInfoByTamanhoId(Integer tamanho) {
+		if (tamanho != null && this.getTamanhos() != null) {
+			for (ProdutoTamanho produtoTamanho : this.getTamanhos()) {
+				if (produtoTamanho.getTamanho().getIdTamanho()
+						.equals(tamanho)) {
+					return produtoTamanho;
+				}
+			}
+		}
+		return null;
+	}
+
+	public ProdutoSabor getSaborInfoBySabor(Sabor sabor) {
+		if (sabor != null && this.getSabores() != null) {
+			for (ProdutoSabor produtoSabor : this.getSabores()) {
+				if (produtoSabor.getSabor().getIdSabor()
+						.equals(sabor.getIdSabor())) {
+					return produtoSabor;
+				}
+			}
+		}
+		return null;
+	}
 	
-	public ProdutoSabor getSaborInfoBySabor(Sabor sabor)
-	{
-		if(sabor != null && this.getSabores() != null)
-		{
-			for(ProdutoSabor produtoSabor : this.getSabores())
-			{
-				if(produtoSabor.getSabor().getIdSabor().equals(sabor.getIdSabor()))
-				{
+	public ProdutoSabor getSaborInfoBySaborId(Integer sabor) {
+		if (sabor != null && this.getSabores() != null) {
+			for (ProdutoSabor produtoSabor : this.getSabores()) {
+				if (produtoSabor.getSabor().getIdSabor()
+						.equals(sabor)) {
 					return produtoSabor;
 				}
 			}
@@ -155,5 +178,14 @@ public class Produto implements Serializable {
 				+ ", tamanhos=" + (tamanhos != null ? tamanhos.size() : 0)
 				+ ", qtdAdicionalIncluso=" + qtdAdicionalIncluso
 				+ ", precoAdicional=" + precoAdicional + "]";
+	}
+
+	public List<ProdutoProdutoAdicional> getProdutosAdicionais() {
+		return produtosAdicionais;
+	}
+
+	public void setProdutosAdicionais(
+			List<ProdutoProdutoAdicional> produtosAdicionais) {
+		this.produtosAdicionais = produtosAdicionais;
 	}
 }

@@ -2,6 +2,7 @@ package br.comvizzatech.teste.model.produtos;
 
 import java.io.Serializable;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Id;
@@ -11,6 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @XmlRootElement
 @Table(name = "\"TAMANHO\"", schema = "milkshakecia")
+@Cacheable(true)
 public class Tamanho implements Serializable{
 
 	/**

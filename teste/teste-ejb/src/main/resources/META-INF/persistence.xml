@@ -26,9 +26,7 @@
       <!-- The datasource is deployed as <EAR>/META-INF/teste-ds.xml, you
          can find it in the source at ear/src/main/application/META-INF/teste-ds.xml -->
       <jta-data-source>java:jboss/datasources/MilkshakeCIA</jta-data-source>
-      <class>br.comvizzatech.teste.model.mesa.Mesa</class>
-      <class>br.comvizzatech.teste.model.mesa.MesaHistorico</class>
-      <class>br.comvizzatech.teste.model.mesa.MesaHistoricoPK</class>
+      <shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
       <properties>
          <!-- Properties for Hibernate -->
          <!--  property name="hibernate.hbm2ddl.auto" value="create-drop" /-->

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Cars</title>
+	<style type="text/css">
+.ui-widget {
+	font-size: 90%;
+}
+</style>
+</h:head>
+<h:body>
+
+	<p:growl autoUpdate="true" globalOnly="false" />
+
+	<script type="text/javascript">
+    function handleDrop(event, ui) {
+        var droppedCar = ui.draggable;
+ 
+        droppedCar.fadeOut('fast');
+    }
+</script>
+
+	<h:form id="form">
+		<p:layout style="min-width:600px;min-height:600px;">
+			<p:layoutUnit position="west" size="30%">
+				<p:dataTable value="#{dndCarsView.produtosSelecionados}" var="prods" id="curr">
+					<p:column headerText="Produto">
+						<h:outputText value="#{prods.printProdutoInfo()}" />
+					</p:column>
+					<p:column headerText="Qtd">
+						<h:outputText value="1" />
+					</p:column>
+					<p:column headerText="Valor">
+						<h:outputText value="${prods.preco}" />
+					</p:column>
+					<p:column>
+					    <p:commandButton icon="fa-remove" action=""/>
+					</p:column>
+				</p:dataTable>
+			</p:layoutUnit>
+
+			<p:layoutUnit position="center">
+
+				<h:messages styleClass="messages" errorClass="invalid"
+					infoClass="valid" warnClass="warning" globalOnly="true" />
+
+				<p:fieldset id="categorias" legend="Categorias"
+					rendered="#{empty dndCarsView.categoriaSelecionada}">
+					<p:dataGrid id="categoriaGrid" var="cat"
+						value="#{dndCarsView.categorias}" columns="3"
+						rendered="#{empty dndCarsView.categoriaSelecionada}">
+						<p:commandButton id="escolheCategoria" value="#{cat.nome}"
+							style="width:145px" update=":form:produtoGrid"
+							onchange="$('this.disable');">
+							<f:setPropertyActionListener value="#{cat.produtos}"
+								target="#{dndCarsView.produtos}" />
+						</p:commandButton>
+					</p:dataGrid>
+				</p:fieldset>
+
+				<p:fieldset id="produtos" legend="Produto">
+					<p:dataGrid id="produtoGrid" var="prod"
+						value="#{dndCarsView.produtos}" columns="2">
+						<p:commandButton id="escolheProduto" value="#{prod.nome}"
+							style="width:145px" update=":form:tamanhoGrid :form:saborGrid">
+							<f:setPropertyActionListener value="#{prod}"
+								target="#{dndCarsView.produtoSelecionado}" />
+						</p:commandButton>
+					</p:dataGrid>
+				</p:fieldset>
+
+				<p:fieldset id="tamanho" legend="Tamanho">
+					<h:panelGrid columns="2" id="tamanhoGrid">
+						<p:selectOneRadio id="tamanhoId"
+							rendered="#{not empty dndCarsView.tamanhosDisponiveis}"
+							value="#{dndCarsView.produtoConfig.tamanho}" layout="grid"
+							columns="1">
+							<f:selectItems value="#{dndCarsView.tamanhosDisponiveis}"
+								var="tam"
+								itemLabel="#{tam.tamanho.sigla} - #{tam.tamanho.nome} - #{tam.precoStr}"
+								itemValue="#{tam.tamanho.idTamanho}" />
+						</p:selectOneRadio>
+					</h:panelGrid>
+
+				</p:fieldset>
+
+				<p:fieldset id="sabores" legend="Sabores">
+					<h:panelGrid columns="3" id="saborGrid">
+						<p:selectOneMenu id="saborId"
+							rendered="#{not empty dndCarsView.saboresDisponiveis}"
+							value="#{dndCarsView.produtoConfig.sabor}">
+							<f:selectItem itemValue="#{null}"
+								itemLabel="-- Selecione um Sabor --" noSelectionOption="true" />
+							<f:selectItems value="#{dndCarsView.saboresDisponiveis}"
+								var="sab" itemLabel="#{sab.sabor.nome}"
+								itemValue="#{sab.sabor.idSabor}" />
+						</p:selectOneMenu>
+					</h:panelGrid>
+
+				</p:fieldset>
+
+				<p:commandButton id="Adicionar" label="Adicionar produto"
+					name="Adicionar produto" action="#{dndCarsView.adicionaPedido()}"
+					update=":form:produtoGrid :form:tamanhoGrid :form:saborGrid :form:curr">
+				</p:commandButton>
+
+			</p:layoutUnit>
+		</p:layout>
+	</h:form>
+
+
+</h:body>
+</html>

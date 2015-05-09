@@ -38,50 +38,24 @@
 
 						<p:commandButton id="abrirMesaBtn"
 							value="#{mesa.status ? 'Abrir Mesa' : 'Fechar Mesa'}"
-							action="${mesaController.abreFechaMesa(mesa)}"
-							onsuccess="PF('notaDialog').show()" style="width:145px"
+							action="${mesaController.abreFechaMesa(mesa)}" style="width:145px"
 							update=":form:gridMesas">
 							<f:setPropertyActionListener value="#{mesa}"
 								target="#{selectedMesa}" />
 						</p:commandButton>
 
-						<p:commandLink update=":mesaDetail" rendered="#{!mesa.status}"
-							oncomplete="PF('mesaDialog').show()" title="View Detail">
-							<h:outputText styleClass="ui-icon ui-icon-search"
-								style="margin:0 auto;" />
+						<p:commandButton rendered="#{!mesa.status}"
+							actionListener="#{dFView.viewPedidoModal()}"
+							title="ADICIONAR PEDIDO">
 							<f:setPropertyActionListener value="#{mesa}"
 								target="#{selectedMesa}" />
-						</p:commandLink>
-
-						<p:commandLink update=":mesaDetail"
-							oncomplete="PF('mesaDialog').show()" title="View Detail">
-							<h:outputText styleClass="ui-icon ui-icon-search"
-								style="margin:0 auto;" />
-							<f:setPropertyActionListener value="#{mesa}"
-								target="#{selectedMesa}" />
-						</p:commandLink>
+						</p:commandButton>
 					</h:panelGrid>
 				</p:panel>
 
 			</p:dataGrid>
 
 		</h:form>
-
-		<p:dialog header="Adicionar Pedido" widgetVar="mesaDialog"
-			modal="true" showEffect="fade" hideEffect="fade" resizable="false"
-			appendTo="@(body)">
-			<p:outputPanel id="mesaDetail" style="text-align:center;">
-				<p:panelGrid columns="2" rendered="#{not empty selectedMesa}">
-					<f:facet name="header">
-							Mesa #{selectedMesa.idMesa}
-						</f:facet>
-
-					<h:outputText value="Status:" />
-					<h:outputText value="#{selectedMesa.status ? 'LIVRE' : 'OCUPADA'}" />
-				</p:panelGrid>
-			</p:outputPanel>
-		</p:dialog>
-
 	</ui:define>
 
 </ui:composition>

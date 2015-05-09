@@ -19,9 +19,6 @@ public class MesaController {
 
 	@Inject
 	private MesaService mesaService;
-	
-	@Inject
-	private Conversation conversation;
 
 
 	public boolean abreFechaMesa(Mesa mesa) throws Exception {
