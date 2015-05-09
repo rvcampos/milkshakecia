@@ -16,6 +16,7 @@ public class ProdutoConfig {
 	private int idCombo;
 	private int idxCombo;
 	private List<Integer> adicionais;
+	private int qtd = 1;
 
 	public int getId() {
 		return id;
@@ -72,67 +73,76 @@ public class ProdutoConfig {
 	public void setAdicionais(List<Integer> adicionais) {
 		this.adicionais = adicionais;
 	}
-	
-	public String printProdutoInfo()
-	{
-		if(this.produto == null)
-		{
+
+	public String printProdutoInfo() {
+		if (this.produto == null) {
 			return null;
 		}
-		
+
 		StringBuilder desc = new StringBuilder(produto.getNome());
 
-		if(tamanho != null)
-		{
-			ProdutoTamanho prdTamanho = produto.getTamanhoInfoByTamanhoId(tamanho);
+		if (tamanho != null) {
+			ProdutoTamanho prdTamanho = produto
+					.getTamanhoInfoByTamanhoId(tamanho);
 			desc.append(" ").append(prdTamanho.getTamanho().getNome());
 		}
-		
-		if(sabor != null)
-		{
+
+		if (sabor != null) {
 			ProdutoSabor prdSabor = produto.getSaborInfoBySaborId(sabor);
 			desc.append(" ").append(prdSabor.getSabor().getNome());
 		}
-		
-		
+
 		return desc.toString();
 	}
-	
-	public String getPreco()
-	{
-		if(produto == null)
-		{
+
+	public String getPreco() {
+		if (produto == null) {
 			return "NULO";
 		}
 		StringBuilder preco = new StringBuilder("R$ ");
-		
+
 		BigDecimal dec = BigDecimal.ZERO;
-		if(produto.getPrecoPadrao() != null)
-		{
+		if (produto.getPrecoPadrao() != null) {
 			dec = produto.getPrecoPadrao();
 		}
-		
-		if(tamanho != null)
-		{
-			ProdutoTamanho prdTamanho = produto.getTamanhoInfoByTamanhoId(tamanho);
-			if(prdTamanho.getPreco() != null)
-			{
+
+		if (tamanho != null) {
+			ProdutoTamanho prdTamanho = produto
+					.getTamanhoInfoByTamanhoId(tamanho);
+			if (prdTamanho.getPreco() != null) {
 				dec = prdTamanho.getPreco();
 			}
 		}
-		
-		if(sabor != null)
-		{
+
+		if (sabor != null) {
 			ProdutoSabor prdSabor = produto.getSaborInfoBySaborId(sabor);
-			if(prdSabor.getPrecoAdicional() != null)
-			{
+			if (prdSabor.getPrecoAdicional() != null) {
 				dec = dec.add(prdSabor.getPrecoAdicional());
 			}
 		}
-		
+		dec = dec.multiply(BigDecimal.valueOf(qtd));
+
 		preco.append(dec.toString());
-		
+
 		return preco.toString();
 	}
-	
+
+	public int getQtd() {
+		return qtd;
+	}
+
+	public void setQtd(int qtd) {
+		this.qtd = qtd;
+	}
+
+	public void addQty() {
+		qtd++;
+	}
+
+	public void remQty() {
+		if (qtd > 1) {
+			qtd--;
+		}
+	}
+
 }

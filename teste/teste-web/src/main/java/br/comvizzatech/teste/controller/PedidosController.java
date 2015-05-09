@@ -21,7 +21,7 @@ import br.comvizzatech.teste.model.produtos.ProdutoProdutoAdicional;
 import br.comvizzatech.teste.model.produtos.ProdutoSabor;
 import br.comvizzatech.teste.model.produtos.ProdutoTamanho;
 
-@ManagedBean(name = "dndCarsView")
+@ManagedBean(name = "pedidosView")
 @ViewScoped
 public class PedidosController implements Serializable {
 
@@ -182,5 +182,13 @@ public class PedidosController implements Serializable {
 		}
 
 		return true;
+	}
+	
+	public void removeProduto(ProdutoConfig produto)
+	{
+		if(produto != null)
+		{
+			produtosSelectionados.remove(produto);
+		}
 	}
 }
