@@ -26,10 +26,6 @@
       <!-- The datasource is deployed as <EAR>/META-INF/teste-ds.xml, you
          can find it in the source at ear/src/main/application/META-INF/teste-ds.xml -->
       <jta-data-source>java:jboss/datasources/MilkshakeCIA</jta-data-source>
-      <class>br.comvizzatech.teste.model.ordem.ItemOrdem</class>
-      <class>br.comvizzatech.teste.model.ordem.ItemOrdemDet</class>
-      <class>br.comvizzatech.teste.model.ordem.ItemOrdemDetAdic</class>
-      <class>br.comvizzatech.teste.model.ordem.Ordem</class>
       <shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
       <properties>
          <!-- Properties for Hibernate -->
