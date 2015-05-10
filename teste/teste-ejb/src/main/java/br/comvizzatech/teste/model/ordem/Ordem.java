@@ -2,8 +2,10 @@ package br.comvizzatech.teste.model.ordem;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,7 +24,7 @@ public class Ordem implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "ID_ORDER")
 	private Long idOrdem;
 
@@ -42,7 +44,7 @@ public class Ordem implements Serializable {
 	private Integer tipoPagamento;
 
 	// bi-directional many-to-one association to ItemOrdem
-	@OneToMany(mappedBy = "ordem")
+	@OneToMany(mappedBy = "ordem",cascade={CascadeType.ALL})
 	private List<ItemOrdem> itemOrdems;
 
 	public Ordem() {
@@ -105,6 +107,10 @@ public class Ordem implements Serializable {
 	}
 
 	public ItemOrdem addItemOrdem(ItemOrdem itemOrdem) {
+		if(getItemOrdems()==null)
+		{
+			setItemOrdems(new ArrayList<ItemOrdem>());
+		}
 		getItemOrdems().add(itemOrdem);
 		itemOrdem.setOrdem(this);
 

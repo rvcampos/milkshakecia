@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -26,7 +27,7 @@ public class ItemOrdemDet implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "ID_ITEM_ORDEM_DET")
 	private Long idItemOrdemDet;
 
@@ -50,7 +51,7 @@ public class ItemOrdemDet implements Serializable {
 	@Column(name = "QUANTIDADE")
 	private Integer quantidade;
 
-	@OneToMany(mappedBy = "itemOrdemDet")
+	@OneToMany(mappedBy = "itemOrdemDet",cascade=CascadeType.ALL)
 	private List<ItemOrdemDetAdic> itemDetAdic;
 
 	public ItemOrdemDet() {

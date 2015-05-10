@@ -287,10 +287,11 @@ public class PedidosController implements Serializable {
 				}
 				itmOrdem.addItemOrdemDet(det);
 			}
+			ordem.addItemOrdem(itmOrdem);
 			ordem.setStatus(0);
 			ordem.setDataOrdem(new Timestamp(System.currentTimeMillis()));
+			ordemService.criaOrdem(ordem);
 		}
-		ordemService.criaOrdem(ordem);
 	}
 
 }

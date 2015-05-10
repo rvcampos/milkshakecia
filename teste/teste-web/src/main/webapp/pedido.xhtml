@@ -51,17 +51,17 @@
 
 					<f:facet name="footer">  
             				Total: #{pedidosView.totalPedidos()}
-            				    <p:commandButton value="Destroy the World"
-							actionListener="#{dialogView.destroyWorld}" update="message">
-							<p:confirm header="Confirmation" message="Deseja confirmar o pedido?"
-								icon="ui-icon-alert" />
-						</p:commandButton>
-						<p:confirmDialog global="true" showEffect="fade"
-							hideEffect="explode">
-							<p:commandButton value="Sim" type="button"
-								styleClass="ui-confirmdialog-yes" icon="ui-icon-check" action="#{pedidosView.confirmaOrdem()}"/>
-							<p:commandButton value="Não" type="button"
-								styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            				    <p:commandButton value="Finalizar Pedido"
+							type="button" onclick="PF('confirmDialog').show()" />
+						<p:confirmDialog
+							message="Deseja concluir o pedido?"
+							header="Conclusão de Pedido" severity="alert"
+							widgetVar="confirmDialog" appendTo="@(body)">
+							<p:commandButton value="Sim"
+								action="#{pedidosView.confirmaOrdem()}"
+								oncomplete="PF('confirmDialog').hide()" />
+							<p:commandButton value="Not Yet"
+								onclick="PF('confirmDialog').hide();" type="button" />
 						</p:confirmDialog>
 					</f:facet>
 
@@ -135,10 +135,15 @@
 					update=":form:produtoGrid :form:tamanhoGrid :form:saborGrid :form:curr">
 				</p:commandButton>
 
+				<div id="hidBtn" hidden="true">
+					<p:commandButton id="concluiordem"
+						action="#{pedidosView.confirmaOrdem()}"
+						update=":form:produtoGrid :form:tamanhoGrid :form:saborGrid :form:curr">
+					</p:commandButton>
+				</div>
+
 			</p:layoutUnit>
 		</p:layout>
 	</h:form>
-
-
 </h:body>
 </html>

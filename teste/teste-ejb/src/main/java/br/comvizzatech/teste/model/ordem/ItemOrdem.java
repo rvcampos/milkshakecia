@@ -3,8 +3,11 @@ package br.comvizzatech.teste.model.ordem;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -17,6 +20,7 @@ public class ItemOrdem {
 
 	@Id
 	@Column(name="id_item_ordem")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long idItemOrdem;
 
 	@ManyToOne
@@ -29,7 +33,7 @@ public class ItemOrdem {
 	@Column(name = "id_combo")
 	private Integer idCombo;
 
-	@OneToMany(mappedBy = "itemOrdem")
+	@OneToMany(mappedBy = "itemOrdem", cascade=CascadeType.ALL)
 	private List<ItemOrdemDet> itemOrdemDet;
 
 	public Long getIdItemOrdem() {
