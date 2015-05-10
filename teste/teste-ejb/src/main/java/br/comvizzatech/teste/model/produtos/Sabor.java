@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
 @XmlRootElement
-@Table(name = "\"SABOR\"")
+@Table(name = "SABOR")
 @Cacheable(true)
 public class Sabor implements Serializable{
 

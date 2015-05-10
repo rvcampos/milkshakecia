@@ -15,7 +15,7 @@ import br.comvizzatech.teste.model.produtos.Produto;
 
 @Entity
 @XmlRootElement
-@Table(name = "\"CATEGORIA\"", schema = "milkshakecia")
+@Table(name = "CATEGORIA", schema = "milkshakecia")
 public class Categoria implements Serializable{
 
 	/**

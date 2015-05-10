@@ -11,23 +11,23 @@ import java.sql.Timestamp;
  * 
  */
 @Entity
-@Table(name="\"MESA\"")
+@Table(name="MESA")
 @NamedQuery(name="Mesa.findAll", query="SELECT m FROM Mesa m")
 public class Mesa implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="\"ID_MESA\"")
+	@Column(name="ID_MESA")
 	private Integer idMesa;
 
-	@Column(name="\"DATA_ABERTURA\"")
+	@Column(name="DATA_ABERTURA")
 	private Timestamp dataAbertura;
 
-	@Column(name="\"DESCONTO\"")
+	@Column(name="DESCONTO")
 	private BigDecimal desconto;
 
-	@Column(name="\"STATUS\"")
+	@Column(name="STATUS")
 	private Boolean status;
 
 	public Mesa() {

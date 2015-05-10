@@ -154,4 +154,8 @@ public class ProdutoConfig {
 		}
 	}
 
+	public String getDetalhes() {
+		return null;
+	}
+
 }

@@ -10,7 +10,7 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
-@Table(name = "\"PRODUTO_PRODUTOS_ADICIONAIS\"")
+@Table(name = "PRODUTO_PRODUTOS_ADICIONAIS")
 @XmlRootElement
 @IdClass(ProdutoProdutoAdicionalPkey.class)
 @Cacheable(true)
@@ -18,12 +18,12 @@ public class ProdutoProdutoAdicional {
 
 	@Id
 	@OneToOne
-	@JoinColumn(name = "\"ID_PRODUTO\"", insertable=false,updatable=false)
+	@JoinColumn(name = "ID_PRODUTO", insertable=false,updatable=false)
 	private Produto produto;
 
 	@Id
 	@OneToOne
-	@JoinColumn(name = "\"ID_PRODUTO_ADICIONAL\"", insertable=false,updatable=false)
+	@JoinColumn(name = "ID_PRODUTO_ADICIONAL", insertable=false,updatable=false)
 	private ProdutoAdicional produtoAdicional;
 
 	public Produto getProduto() {

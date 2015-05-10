@@ -22,7 +22,7 @@ import br.comvizzatech.teste.model.Categoria;
 
 @Entity
 @XmlRootElement
-@Table(name = "\"PRODUTO\"")
+@Table(name = "PRODUTO")
 @Cacheable(true)
 public class Produto implements Serializable {
 
@@ -50,13 +50,13 @@ public class Produto implements Serializable {
 	private List<ProdutoTamanho> tamanhos;
 
 	@OneToMany(fetch = EAGER)
-	@JoinColumn(name = "\"ID_PRODUTO\"", nullable = false, insertable = false, updatable = false, referencedColumnName = "id_produto")
+	@JoinColumn(name = "ID_PRODUTO", nullable = false, insertable = false, updatable = false, referencedColumnName = "id_produto")
 	private List<ProdutoProdutoAdicional> produtosAdicionais;
 
 	@Column(name = "qtd_adicional_incluso")
 	private Short qtdAdicionalIncluso;
 
-	@Column(name = "\"preco_adicional\"")
+	@Column(name = "preco_adicional")
 	private BigDecimal precoAdicional;
 
 	public Integer getIdProduto() {

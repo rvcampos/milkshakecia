@@ -15,7 +15,7 @@ import javax.validation.constraints.DecimalMax;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
-@Table(name = "\"PRODUTO_TAMANHO\"")
+@Table(name = "PRODUTO_TAMANHO")
 @XmlRootElement
 @IdClass(ProdutoTamanhoPkey.class)
 @Cacheable(true)

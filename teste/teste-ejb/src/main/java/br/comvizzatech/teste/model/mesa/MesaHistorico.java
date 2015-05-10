@@ -11,7 +11,7 @@ import java.sql.Timestamp;
  * 
  */
 @Entity
-@Table(name="\"MESA_HISTORICO\"")
+@Table(name="MESA_HISTORICO")
 @NamedQuery(name="MesaHistorico.findAll", query="SELECT m FROM MesaHistorico m")
 public class MesaHistorico implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -19,10 +19,10 @@ public class MesaHistorico implements Serializable {
 	@EmbeddedId
 	private MesaHistoricoPK id;
 
-	@Column(name="\"DATA_ABERTURA\"")
+	@Column(name="DATA_ABERTURA")
 	private Timestamp dataAbertura;
 
-	@Column(name="\"DESCONTO\"")
+	@Column(name="DESCONTO")
 	private BigDecimal desconto;
 
 	@Column(name="dt_fechamento")

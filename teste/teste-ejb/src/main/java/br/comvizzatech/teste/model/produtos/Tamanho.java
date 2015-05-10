@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
 @XmlRootElement
-@Table(name = "\"TAMANHO\"", schema = "milkshakecia")
+@Table(name = "TAMANHO", schema = "milkshakecia")
 @Cacheable(true)
 public class Tamanho implements Serializable{
 

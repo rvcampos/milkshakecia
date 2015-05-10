@@ -9,54 +9,51 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
 
 /**
  * The persistent class for the "ORDEM" database table.
  * 
  */
 @Entity
-@Table(name="\"ORDEM\"")
-@NamedQuery(name="Ordem.findAll", query="SELECT o FROM Ordem o")
+@Table(name = "ORDEM")
 public class Ordem implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="\"ID_ORDER\"")
-	private Long idOrder;
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "ID_ORDER")
+	private Long idOrdem;
 
-	@Column(name="\"DATA_ORDEM\"")
+	@Column(name = "DATA_ORDEM")
 	private Timestamp dataOrdem;
 
-	@Column(name="\"DOCUMENTO_NOTA\"")
+	@Column(name = "DOCUMENTO_NOTA")
 	private String documentoNota;
 
-	@Column(name="\"IND_VIAGEM\"")
+	@Column(name = "IND_VIAGEM")
 	private Boolean indViagem;
 
-	@Column(name="\"STATUS\"")
+	@Column(name = "STATUS")
 	private Integer status;
 
-	@Column(name="\"TIPO_PAGAMENTO\"")
+	@Column(name = "TIPO_PAGAMENTO")
 	private Integer tipoPagamento;
 
-	//bi-directional many-to-one association to ItemOrdem
-	@OneToMany(mappedBy="ordem")
+	// bi-directional many-to-one association to ItemOrdem
+	@OneToMany(mappedBy = "ordem")
 	private List<ItemOrdem> itemOrdems;
 
 	public Ordem() {
 	}
 
-	public Long getIdOrder() {
-		return this.idOrder;
+	public Long getIdOrdem() {
+		return this.idOrdem;
 	}
 
-	public void setIdOrder(Long idOrder) {
-		this.idOrder = idOrder;
+	public void setIdOrdem(Long idOrdem) {
+		this.idOrdem = idOrdem;
 	}
 
 	public Timestamp getDataOrdem() {

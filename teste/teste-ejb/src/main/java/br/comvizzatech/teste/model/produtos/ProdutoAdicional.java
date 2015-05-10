@@ -17,7 +17,7 @@ import javax.persistence.Table;
  * 
  */
 @Entity
-@Table(name="\"PRODUTO_ADICIONAL\"")
+@Table(name="PRODUTO_ADICIONAL")
 @NamedQuery(name="ProdutoAdicional.findAll", query="SELECT p FROM ProdutoAdicional p")
 @Cacheable(true)
 public class ProdutoAdicional implements Serializable {
@@ -25,10 +25,10 @@ public class ProdutoAdicional implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="\"ID_PRODUTO_ADICIONAL\"")
+	@Column(name="ID_PRODUTO_ADICIONAL")
 	private Integer idProdutoAdicional;
 
-	@Column(name="\"NOME\"")
+	@Column(name="NOME")
 	private String nome;
 
 	public ProdutoAdicional() {

@@ -2,6 +2,7 @@ package br.comvizzatech.teste.controller;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,10 +20,15 @@ import br.comvizzatech.teste.data.rep.CategoriaRepository;
 import br.comvizzatech.teste.model.Categoria;
 import br.comvizzatech.teste.model.ProdutoConfig;
 import br.comvizzatech.teste.model.mesa.Mesa;
+import br.comvizzatech.teste.model.ordem.ItemOrdem;
+import br.comvizzatech.teste.model.ordem.ItemOrdemDet;
+import br.comvizzatech.teste.model.ordem.ItemOrdemDetAdic;
+import br.comvizzatech.teste.model.ordem.Ordem;
 import br.comvizzatech.teste.model.produtos.Produto;
 import br.comvizzatech.teste.model.produtos.ProdutoProdutoAdicional;
 import br.comvizzatech.teste.model.produtos.ProdutoSabor;
 import br.comvizzatech.teste.model.produtos.ProdutoTamanho;
+import br.comvizzatech.teste.service.OrdemService;
 
 @ManagedBean(name = "pedidosView")
 @ViewScoped
@@ -33,6 +39,9 @@ public class PedidosController implements Serializable {
 
 	@Inject
 	private CategoriaRepository service;
+	
+	@Inject
+	private OrdemService ordemService;
 	
 	private String pageTitle = "BALCÃO";
 	
@@ -57,6 +66,8 @@ public class PedidosController implements Serializable {
 	private List<ProdutoSabor> saboresDisponiveis;
 
 	private List<ProdutoProdutoAdicional> adicionaisDisponiveis;
+	
+	private Ordem ordem;
 	
 	@PostConstruct
 	public void init() {
@@ -248,6 +259,38 @@ public class PedidosController implements Serializable {
 		}
 		
 		return "R$ " + precoTotal.toString(); 
+	}
+	
+	public void confirmaOrdem()
+	{
+		Ordem ordem = new Ordem();
+		if(produtosSelectionados != null && !produtosSelectionados.isEmpty())
+		{
+			ItemOrdem itmOrdem = new ItemOrdem();
+			itmOrdem.setOrdem(ordem);
+			for(ProdutoConfig config : produtosSelectionados)
+			{
+				ItemOrdemDet det = new ItemOrdemDet();
+				det.setProduto(config.getProduto());
+				det.setIdSabor(config.getSabor());
+				det.setIdTamanho(config.getTamanho());
+				det.setQuantidade(config.getQtd());
+				det.setDetalhe(config.getDetalhes());
+				if(config.getAdicionais() != null && !config.getAdicionais().isEmpty())
+				{
+					for(Integer adic : config.getAdicionais())
+					{
+						ItemOrdemDetAdic itemAdic = new ItemOrdemDetAdic();
+						itemAdic.setIdProdutoAdic(adic);
+						det.addItemDetAdic(itemAdic);
+					}
+				}
+				itmOrdem.addItemOrdemDet(det);
+			}
+			ordem.setStatus(0);
+			ordem.setDataOrdem(new Timestamp(System.currentTimeMillis()));
+		}
+		ordemService.criaOrdem(ordem);
 	}
 
 }

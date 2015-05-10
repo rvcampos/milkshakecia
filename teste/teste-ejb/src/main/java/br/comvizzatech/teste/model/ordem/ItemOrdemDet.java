@@ -1,9 +1,9 @@
 package br.comvizzatech.teste.model.ordem;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,7 +11,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -22,38 +21,36 @@ import br.comvizzatech.teste.model.produtos.Produto;
  * 
  */
 @Entity
-@Table(name = "\"ITEM_ORDEM_DET\"")
-@NamedQuery(name = "ItemOrdemDet.findAll", query = "SELECT i FROM ItemOrdemDet i")
+@Table(name = "ITEM_ORDEM_DET")
 public class ItemOrdemDet implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "\"ID_ITEM_ORDEM_DET\"")
+	@Column(name = "ID_ITEM_ORDEM_DET")
 	private Long idItemOrdemDet;
 
-	@Column(name = "\"DETALHE\"")
+	@Column(name = "DETALHE")
 	private String detalhe;
 
 	@ManyToOne
-	@JoinColumn(name = "\"ID_ITEM_ORDEM\"", referencedColumnName = "\"ID_ITEM_ORDEM\"")
+	@JoinColumn(name="ID_ITEM_ORDEM",referencedColumnName="ID_ITEM_ORDEM")
 	private ItemOrdem itemOrdem;
 
-	// @Column(name="\"ID_PRODUTO\"")
 	@ManyToOne
-	@JoinColumn(name = "\"ID_PRODUTO\"", referencedColumnName = "id_produto")
+	@JoinColumn(name = "ID_PRODUTO", referencedColumnName = "id_produto")
 	private Produto produto;
 
-	@Column(name = "\"ID_SABOR\"")
+	@Column(name = "ID_SABOR")
 	private Integer idSabor;
 
-	@Column(name = "\"ID_TAMANHO\"")
+	@Column(name = "ID_TAMANHO")
 	private Integer idTamanho;
 
-	@Column(name = "\"QUANTIDADE\"")
+	@Column(name = "QUANTIDADE")
 	private Integer quantidade;
 
-	@OneToMany(mappedBy = "itemOrdemDet",cascade=CascadeType.ALL)
+	@OneToMany(mappedBy = "itemOrdemDet")
 	private List<ItemOrdemDetAdic> itemDetAdic;
 
 	public ItemOrdemDet() {
@@ -121,6 +118,16 @@ public class ItemOrdemDet implements Serializable {
 
 	public void setItemDetAdic(List<ItemOrdemDetAdic> itemDetAdic) {
 		this.itemDetAdic = itemDetAdic;
+	}
+	
+	public void addItemDetAdic(ItemOrdemDetAdic itemOrdemDetAdic)
+	{
+		if(this.itemDetAdic == null)
+		{
+			this.itemDetAdic = new ArrayList<ItemOrdemDetAdic>();
+		}
+		itemOrdemDetAdic.setItemOrdemDet(this);
+		this.itemDetAdic.add(itemOrdemDetAdic);
 	}
 
 }

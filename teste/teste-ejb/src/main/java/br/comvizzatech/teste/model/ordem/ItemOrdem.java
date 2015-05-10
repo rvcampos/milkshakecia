@@ -1,8 +1,8 @@
 package br.comvizzatech.teste.model.ordem;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -12,26 +12,26 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "\"ITEM_ORDEM\"")
+@Table(name = "item_ordem",schema="milkshakecia")
 public class ItemOrdem {
 
 	@Id
-	@Column(name = "\"ID_ITEM_ORDEM\"")
+	@Column(name="id_item_ordem")
 	private Long idItemOrdem;
 
 	@ManyToOne
-	@JoinColumn(name = "\"ID_ORDEM\"", referencedColumnName = "\"ID_ORDER\"")
+	@JoinColumn(name = "id_ordem", referencedColumnName = "ID_ORDER")
 	private Ordem ordem;
 
-	@Column(name = "\"CANCELADO\"")
+	@Column(name = "cancelado")
 	private Boolean cancelado;
 
-	@Column(name = "\"ID_COMBO\"")
+	@Column(name = "id_combo")
 	private Integer idCombo;
-	
-	@OneToMany(mappedBy="itemOrdem",cascade=CascadeType.ALL)
-	private List<ItemOrdemDet> itemOrdemDetAdic;
-	
+
+	@OneToMany(mappedBy = "itemOrdem")
+	private List<ItemOrdemDet> itemOrdemDet;
+
 	public Long getIdItemOrdem() {
 		return idItemOrdem;
 	}
@@ -62,5 +62,21 @@ public class ItemOrdem {
 
 	public void setIdCombo(Integer idCombo) {
 		this.idCombo = idCombo;
+	}
+
+	public void addItemOrdemDet(ItemOrdemDet det) {
+		if (this.getItemOrdemDet() == null) {
+			this.setItemOrdemDet(new ArrayList<ItemOrdemDet>());
+		}
+		det.setItemOrdem(this);
+		getItemOrdemDet().add(det);
+	}
+
+	public List<ItemOrdemDet> getItemOrdemDet() {
+		return itemOrdemDet;
+	}
+
+	public void setItemOrdemDet(List<ItemOrdemDet> itemOrdemDet) {
+		this.itemOrdemDet = itemOrdemDet;
 	}
 }

@@ -16,7 +16,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @IdClass(ProdutoSaborPkey.class)
 @XmlRootElement
-@Table(name = "\"PRODUTO_SABOR\"", schema = "milkshakecia")
+@Table(name = "PRODUTO_SABOR", schema = "milkshakecia")
 @Cacheable(true)
 public class ProdutoSabor implements Serializable{
 
@@ -33,7 +33,7 @@ public class ProdutoSabor implements Serializable{
 	@Column(name = "ativo")
 	private Boolean isAtivo;
 	
-	@Column(name="\"preco_adicional\"")
+	@Column(name="preco_adicional")
 	private BigDecimal precoAdicional;
 
 	public Produto getProduto() {
