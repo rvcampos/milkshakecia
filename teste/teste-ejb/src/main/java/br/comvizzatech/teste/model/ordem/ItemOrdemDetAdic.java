@@ -1,7 +1,16 @@
 package br.comvizzatech.teste.model.ordem;
 
 import java.io.Serializable;
-import javax.persistence.*;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
 /**
  * The persistent class for the "ITEM_ORDEM_DET_ADIC" database table.
@@ -19,8 +28,8 @@ public class ItemOrdemDetAdic implements Serializable {
 	private Long idItemOrdemDetAdic;
 
 	@ManyToOne
-	@JoinColumn(name = "\"ID_ITEM_ORDEM\"", referencedColumnName = "\"ID_ITEM_ORDEM\"")
-	private ItemOrdem itemOrdem;
+	@JoinColumn(name = "\"ID_ITEM_ORDEM_DET\"", referencedColumnName = "\"ID_ITEM_ORDEM_DET\"")
+	private ItemOrdemDet itemOrdemDet;
 
 	@Column(name = "\"ID_PRODUTO_ADIC\"")
 	private Integer idProdutoAdic;
@@ -44,12 +53,12 @@ public class ItemOrdemDetAdic implements Serializable {
 		this.idProdutoAdic = idProdutoAdic;
 	}
 
-	public ItemOrdem getItemOrdem() {
-		return itemOrdem;
+	public ItemOrdemDet getItemOrdemDet() {
+		return itemOrdemDet;
 	}
 
-	public void setItemOrdem(ItemOrdem itemOrdem) {
-		this.itemOrdem = itemOrdem;
+	public void setItemOrdemDet(ItemOrdemDet itemOrdemDet) {
+		this.itemOrdemDet = itemOrdemDet;
 	}
 
 }

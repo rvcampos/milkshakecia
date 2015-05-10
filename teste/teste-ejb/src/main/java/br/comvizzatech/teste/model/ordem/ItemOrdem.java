@@ -30,8 +30,8 @@ public class ItemOrdem {
 	private Integer idCombo;
 	
 	@OneToMany(mappedBy="itemOrdem",cascade=CascadeType.ALL)
-	private List<ItemOrdemDetAdic> itemOrdemDetAdic;
-
+	private List<ItemOrdemDet> itemOrdemDetAdic;
+	
 	public Long getIdItemOrdem() {
 		return idItemOrdem;
 	}
