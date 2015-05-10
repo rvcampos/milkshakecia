@@ -36,17 +36,23 @@
 
 						<h:outputText value="#{mesa.status ? 'LIVRE' : 'OCUPADA'}" />
 
-						<p:commandButton id="abrirMesaBtn"
-							value="#{mesa.status ? 'Abrir Mesa' : 'Fechar Mesa'}"
-							action="${mesaController.abreFechaMesa(mesa)}" style="width:145px"
+						<p:commandButton id="abrirMesaBtn" rendered="#{mesa.status}"
+							value="Abrir Mesa" action="${mesaController.abreFechaMesa(mesa)}"
+							actionListener="#{dFView.viewPedidoModal(mesa.idMesa)}" style="width:145px"
 							update=":form:gridMesas">
 							<f:setPropertyActionListener value="#{mesa}"
 								target="#{selectedMesa}" />
 						</p:commandButton>
 
 						<p:commandButton rendered="#{!mesa.status}"
-							actionListener="#{dFView.viewPedidoModal()}"
-							title="ADICIONAR PEDIDO">
+							actionListener="#{dFView.viewPedidoModal(mesa.idMesa)}"
+							value="ADICIONAR PEDIDO">
+							<f:setPropertyActionListener value="#{mesa}"
+								target="#{pedidosView.selectedMesa}" />
+						</p:commandButton>
+						<p:commandButton id="fecharMesaBtn" rendered="#{!mesa.status}"
+							value="Abrir Mesa" action="${mesaController.abreFechaMesa(mesa)}"
+							style="width:145px" update=":form:gridMesas">
 							<f:setPropertyActionListener value="#{mesa}"
 								target="#{selectedMesa}" />
 						</p:commandButton>

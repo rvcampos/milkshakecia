@@ -1,6 +1,7 @@
 package br.comvizzatech.teste.controller;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,11 +12,13 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.DragDropEvent;
 
 import br.comvizzatech.teste.data.rep.CategoriaRepository;
 import br.comvizzatech.teste.model.Categoria;
 import br.comvizzatech.teste.model.ProdutoConfig;
+import br.comvizzatech.teste.model.mesa.Mesa;
 import br.comvizzatech.teste.model.produtos.Produto;
 import br.comvizzatech.teste.model.produtos.ProdutoProdutoAdicional;
 import br.comvizzatech.teste.model.produtos.ProdutoSabor;
@@ -30,6 +33,12 @@ public class PedidosController implements Serializable {
 
 	@Inject
 	private CategoriaRepository service;
+	
+	private String pageTitle = "BALCÃO";
+	
+	private String idMesa;
+
+	private Mesa selectedMesa;
 
 	private List<Categoria> categorias;
 
@@ -48,10 +57,15 @@ public class PedidosController implements Serializable {
 	private List<ProdutoSabor> saboresDisponiveis;
 
 	private List<ProdutoProdutoAdicional> adicionaisDisponiveis;
-
+	
 	@PostConstruct
 	public void init() {
 		categorias = service.findAllOrderedById();
+		if(facesContext.getExternalContext().getRequestParameterMap().get("idMesa") != null)
+		{
+			this.idMesa = facesContext.getExternalContext().getRequestParameterMap().get("idMesa");
+			this.pageTitle = "MESA " + idMesa;
+		}
 		produtosSelectionados = new ArrayList<ProdutoConfig>();
 		produtoConfig = new ProdutoConfig();
 	}
@@ -108,6 +122,9 @@ public class PedidosController implements Serializable {
 	}
 
 	public void setProdutos(List<Produto> produtos) {
+		if (produtos != null && !produtos.isEmpty()) {
+			RequestContext.getCurrentInstance().update("produtosGRID");
+		}
 		this.produtos = produtos;
 	}
 
@@ -117,6 +134,10 @@ public class PedidosController implements Serializable {
 
 	public void setTamanhosDisponiveis(List<ProdutoTamanho> tamanhosDisponiveis) {
 		this.tamanhosDisponiveis = tamanhosDisponiveis;
+		if (tamanhosDisponiveis != null && !tamanhosDisponiveis.isEmpty()) {
+			RequestContext.getCurrentInstance().update("tamanho");
+			RequestContext.getCurrentInstance().update("tamanhoGrid");
+		}
 	}
 
 	public List<ProdutoSabor> getSaboresDisponiveis() {
@@ -125,6 +146,9 @@ public class PedidosController implements Serializable {
 
 	public void setSaboresDisponiveis(List<ProdutoSabor> saboresDisponiveis) {
 		this.saboresDisponiveis = saboresDisponiveis;
+		if (saboresDisponiveis != null && !saboresDisponiveis.isEmpty()) {
+			RequestContext.getCurrentInstance().update("sabores");
+		}
 	}
 
 	public List<ProdutoProdutoAdicional> getAdicionaisDisponiveis() {
@@ -183,12 +207,47 @@ public class PedidosController implements Serializable {
 
 		return true;
 	}
-	
-	public void removeProduto(ProdutoConfig produto)
-	{
-		if(produto != null)
-		{
+
+	public void removeProduto(ProdutoConfig produto) {
+		if (produto != null) {
 			produtosSelectionados.remove(produto);
 		}
 	}
+
+	public Mesa getSelectedMesa() {
+		return selectedMesa;
+	}
+
+	public void setSelectedMesa(Mesa selectedMesa) {
+		this.selectedMesa = selectedMesa;
+	}
+
+	public String getIdMesa() {
+		return idMesa;
+	}
+
+	public void setIdMesa(String idMesa) {
+		this.idMesa = idMesa;
+	}
+
+	public String getPageTitle() {
+		return pageTitle;
+	}
+
+	public void setPageTitle(String pageTitle) {
+		this.pageTitle = pageTitle;
+	}
+
+	public String totalPedidos() {
+		BigDecimal precoTotal = BigDecimal.ZERO;
+		if(produtosSelectionados != null && !produtosSelectionados.isEmpty())
+		{
+			for (ProdutoConfig produtoProdutoAdicional : produtosSelectionados) {
+				precoTotal = precoTotal.add(produtoProdutoAdicional.getPrecoTtl());
+			}
+		}
+		
+		return "R$ " + precoTotal.toString(); 
+	}
+
 }

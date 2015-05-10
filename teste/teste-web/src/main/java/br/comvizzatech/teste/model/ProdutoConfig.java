@@ -94,13 +94,11 @@ public class ProdutoConfig {
 
 		return desc.toString();
 	}
-
-	public String getPreco() {
+	
+	public BigDecimal getPrecoTtl() {
 		if (produto == null) {
-			return "NULO";
+			return BigDecimal.ZERO;
 		}
-		StringBuilder preco = new StringBuilder("R$ ");
-
 		BigDecimal dec = BigDecimal.ZERO;
 		if (produto.getPrecoPadrao() != null) {
 			dec = produto.getPrecoPadrao();
@@ -121,6 +119,17 @@ public class ProdutoConfig {
 			}
 		}
 		dec = dec.multiply(BigDecimal.valueOf(qtd));
+
+		return dec;
+	}
+
+	public String getPreco() {
+		if (produto == null) {
+			return "NULO";
+		}
+		StringBuilder preco = new StringBuilder("R$ ");
+
+		BigDecimal dec = getPrecoTtl();
 
 		preco.append(dec.toString());
 
