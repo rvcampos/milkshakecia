@@ -291,6 +291,7 @@ public class PedidosController implements Serializable {
 			ordem.setStatus(0);
 			ordem.setDataOrdem(new Timestamp(System.currentTimeMillis()));
 			ordemService.criaOrdem(ordem);
+			// TODO adicionar à mesa, caso idMesa seja diferente de NULO
 		}
 	}
 
