@@ -35,11 +35,11 @@ public class ItemOrdemDet implements Serializable {
 	private String detalhe;
 
 	@ManyToOne
-	@JoinColumn(name="ID_ITEM_ORDEM",referencedColumnName="ID_ITEM_ORDEM")
+	@JoinColumn(name="id_item_ordem",referencedColumnName="id_item_ordem")
 	private ItemOrdem itemOrdem;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_PRODUTO", referencedColumnName = "id_produto")
+	@JoinColumn(name = "id_produto", referencedColumnName = "id_produto")
 	private Produto produto;
 
 	@Column(name = "ID_SABOR")

@@ -26,6 +26,9 @@
       <!-- The datasource is deployed as <EAR>/META-INF/teste-ds.xml, you
          can find it in the source at ear/src/main/application/META-INF/teste-ds.xml -->
       <jta-data-source>java:jboss/datasources/MilkshakeCIA</jta-data-source>
+      <class>br.comvizzatech.teste.model.historico.ItemOrdemDetHistorico</class>
+      <class>br.comvizzatech.teste.model.historico.ItemOrdemHistorico</class>
+      <class>br.comvizzatech.teste.model.historico.OrdemHistorico</class>
       <shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
       <properties>
          <!-- Properties for Hibernate -->

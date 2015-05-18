@@ -1,10 +1,10 @@
 package br.comvizzatech.teste.service;
 
-import java.util.logging.Logger;
-
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+
+import org.apache.logging.log4j.Logger;
 
 import br.comvizzatech.teste.model.ordem.Ordem;
 
@@ -12,7 +12,7 @@ import br.comvizzatech.teste.model.ordem.Ordem;
 public class OrdemService {
 
 	@Inject
-	private Logger log;
+	private Logger logger;
 
 	@Inject
 	private EntityManager em;
@@ -25,11 +25,8 @@ public class OrdemService {
 				em.persist(ord);
 			}
 		} catch (Exception e) {
+			logger.error("",e);
 			return false;
-		}
-		finally
-		{
-			
 		}
 		return true;
 	}

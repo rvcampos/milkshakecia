@@ -8,13 +8,12 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.primefaces.context.RequestContext;
-import org.primefaces.event.DragDropEvent;
 
 import br.comvizzatech.teste.data.rep.CategoriaRepository;
 import br.comvizzatech.teste.model.Categoria;
@@ -30,7 +29,8 @@ import br.comvizzatech.teste.model.produtos.ProdutoSabor;
 import br.comvizzatech.teste.model.produtos.ProdutoTamanho;
 import br.comvizzatech.teste.service.OrdemService;
 
-@ManagedBean(name = "pedidosView")
+//@ManagedBean(name = "pedidosView")
+@Named("pedidosView")
 @ViewScoped
 public class PedidosController implements Serializable {
 
@@ -79,15 +79,6 @@ public class PedidosController implements Serializable {
 		}
 		produtosSelectionados = new ArrayList<ProdutoConfig>();
 		produtoConfig = new ProdutoConfig();
-	}
-
-	public void onProdutoDrop(DragDropEvent ddEvent) {
-		Produto produto = ((Produto) ddEvent.getData());
-
-		ProdutoConfig cfg = new ProdutoConfig();
-		cfg.setProduto(produto);
-
-		produtosSelectionados.add(cfg);
 	}
 
 	public List<Categoria> getCategorias() {
@@ -290,6 +281,10 @@ public class PedidosController implements Serializable {
 			ordem.addItemOrdem(itmOrdem);
 			ordem.setStatus(0);
 			ordem.setDataOrdem(new Timestamp(System.currentTimeMillis()));
+			if(this.getIdMesa() != null)
+			{
+				ordem.setIdMesa(Integer.valueOf(this.getIdMesa()));
+			}
 			ordemService.criaOrdem(ordem);
 			// TODO adicionar à mesa, caso idMesa seja diferente de NULO
 		}

@@ -14,6 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import br.comvizzatech.teste.model.historico.OrdemHistorico;
+
 /**
  * The persistent class for the "ORDEM" database table.
  * 
@@ -24,7 +26,7 @@ public class Ordem implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_ORDER")
 	private Long idOrdem;
 
@@ -44,8 +46,11 @@ public class Ordem implements Serializable {
 	private Integer tipoPagamento;
 
 	// bi-directional many-to-one association to ItemOrdem
-	@OneToMany(mappedBy = "ordem",cascade={CascadeType.ALL})
+	@OneToMany(mappedBy = "ordem", cascade = { CascadeType.ALL })
 	private List<ItemOrdem> itemOrdems;
+	
+	@Column(name="id_mesa")
+	private Integer idMesa;
 
 	public Ordem() {
 	}
@@ -107,8 +112,7 @@ public class Ordem implements Serializable {
 	}
 
 	public ItemOrdem addItemOrdem(ItemOrdem itemOrdem) {
-		if(getItemOrdems()==null)
-		{
+		if (getItemOrdems() == null) {
 			setItemOrdems(new ArrayList<ItemOrdem>());
 		}
 		getItemOrdems().add(itemOrdem);
@@ -122,6 +126,26 @@ public class Ordem implements Serializable {
 		itemOrdem.setOrdem(null);
 
 		return itemOrdem;
+	}
+
+	public Integer getIdMesa() {
+		return idMesa;
+	}
+
+	public void setIdMesa(Integer idMesa) {
+		this.idMesa = idMesa;
+	}
+	
+	public OrdemHistorico criaHistorico(Timestamp date)
+	{
+		OrdemHistorico ordh = new OrdemHistorico();
+		ordh.setDtCriacao(date);
+		ordh.setTipoPagamento(tipoPagamento);
+		ordh.setDataOrdem(dataOrdem);
+		ordh.setIndViagem(indViagem);
+		ordh.setIdMesa(idMesa);
+		ordh.setIdOrdem(idOrdem);
+		return ordh;
 	}
 
 }

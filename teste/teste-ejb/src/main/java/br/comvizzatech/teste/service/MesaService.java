@@ -1,16 +1,20 @@
 package br.comvizzatech.teste.service;
 
 import java.sql.Timestamp;
-import java.util.logging.Logger;
+import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import org.apache.logging.log4j.Logger;
+
+import br.comvizzatech.teste.model.historico.MesaHistorico;
+import br.comvizzatech.teste.model.historico.MesaHistoricoPK;
 import br.comvizzatech.teste.model.mesa.Mesa;
-import br.comvizzatech.teste.model.mesa.MesaHistorico;
-import br.comvizzatech.teste.model.mesa.MesaHistoricoPK;
+import br.comvizzatech.teste.model.ordem.Ordem;
+teste.model.mesa.Mesa;
 
 @Stateless
 public class MesaService {
@@ -43,8 +47,21 @@ public class MesaService {
 		hist.setDataAbertura(mesa.getDataAbertura());
 		hist.setDesconto(mesa.getDesconto());
 		hist.setDtFechamento(dataFechamento);
+		List<Ordem> ordens = findOrdemByMesaId(mesa.getIdMesa());
+		if(ordens != null && !ordens.isEmpty())
+		{
+			
+		}
 		// TODO adicionar pedidos da mesa
 		em.persist(hist);
+	}
+	
+	private List<Ordem> findOrdemByMesaId(Integer mesaId)
+	{
+		return em
+				.createQuery(
+						"select o from Ordem o where o.idMesa = :idMesa")
+						.setParameter("idMesa", mesaId).getResultList();
 	}
 
 	private long getIndexForMesaId(Mesa mesa) {
@@ -72,7 +89,7 @@ public class MesaService {
 			mesa.setDataAbertura(timestamp);
 			em.merge(mesa);
 		} catch (Exception e) {
-			log.throwing(this.getClass().getName(), "fechaMesa", e);
+			log.error("fechaMesa", e);
 		}
 		mesaEventSrc.fire(mesa);
 	}

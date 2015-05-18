@@ -1,4 +1,4 @@
-package br.comvizzatech.teste.model.mesa;
+package br.comvizzatech.teste.model.historico;
 
 import java.io.Serializable;
 import javax.persistence.*;

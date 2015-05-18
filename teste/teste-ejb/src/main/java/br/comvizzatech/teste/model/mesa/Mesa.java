@@ -1,34 +1,49 @@
 package br.comvizzatech.teste.model.mesa;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import br.comvizzatech.teste.model.ordem.Ordem;
 
 /**
  * The persistent class for the "MESA" database table.
  * 
  */
 @Entity
-@Table(name="MESA")
-@NamedQuery(name="Mesa.findAll", query="SELECT m FROM Mesa m")
+@Table(name = "MESA")
+@NamedQuery(name = "Mesa.findAll", query = "SELECT m FROM Mesa m")
 public class Mesa implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="ID_MESA")
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "ID_MESA")
 	private Integer idMesa;
 
-	@Column(name="DATA_ABERTURA")
+	@Column(name = "DATA_ABERTURA")
 	private Timestamp dataAbertura;
 
-	@Column(name="DESCONTO")
+	@Column(name = "DESCONTO")
 	private BigDecimal desconto;
 
-	@Column(name="STATUS")
+	@Column(name = "STATUS")
 	private Boolean status;
+
+	@OneToMany
+	@JoinColumn(columnDefinition = "id_mesa", referencedColumnName = "id_mesa")
+	private List<Ordem> pedidosMesa;
 
 	public Mesa() {
 	}
