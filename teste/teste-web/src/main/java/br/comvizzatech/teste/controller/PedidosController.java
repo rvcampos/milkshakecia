@@ -8,10 +8,10 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import org.primefaces.context.RequestContext;
 
@@ -29,8 +29,8 @@ import br.comvizzatech.teste.model.produtos.ProdutoSabor;
 import br.comvizzatech.teste.model.produtos.ProdutoTamanho;
 import br.comvizzatech.teste.service.OrdemService;
 
-//@ManagedBean(name = "pedidosView")
-@Named("pedidosView")
+@ManagedBean(name = "pedidosView")
+// @Named("pedidosView")
 @ViewScoped
 public class PedidosController implements Serializable {
 
@@ -39,12 +39,12 @@ public class PedidosController implements Serializable {
 
 	@Inject
 	private CategoriaRepository service;
-	
+
 	@Inject
 	private OrdemService ordemService;
-	
+
 	private String pageTitle = "BALCÃO";
-	
+
 	private String idMesa;
 
 	private Mesa selectedMesa;
@@ -67,14 +67,15 @@ public class PedidosController implements Serializable {
 
 	private List<ProdutoProdutoAdicional> adicionaisDisponiveis;
 	
-	private Ordem ordem;
-	
+	private int quantidade;
+
 	@PostConstruct
 	public void init() {
 		categorias = service.findAllOrderedById();
-		if(facesContext.getExternalContext().getRequestParameterMap().get("idMesa") != null)
-		{
-			this.idMesa = facesContext.getExternalContext().getRequestParameterMap().get("idMesa");
+		if (facesContext.getExternalContext().getRequestParameterMap()
+				.get("idMesa") != null) {
+			this.idMesa = facesContext.getExternalContext()
+					.getRequestParameterMap().get("idMesa");
 			this.pageTitle = "MESA " + idMesa;
 		}
 		produtosSelectionados = new ArrayList<ProdutoConfig>();
@@ -100,15 +101,11 @@ public class PedidosController implements Serializable {
 			setTamanhosDisponiveis(produtoSelecionado.getTamanhos());
 			setSaboresDisponiveis(produtoSelecionado.getSabores());
 			this.produtoConfig = new ProdutoConfig();
+		} else {
+			setAdicionaisDisponiveis(null);
+			setTamanhosDisponiveis(null);
+			setSaboresDisponiveis(null);
 		}
-	}
-
-	public Categoria getCategoriaSelecionada() {
-		return categoriaSelecionada;
-	}
-
-	public void setCategoriaSelecionada(Categoria categoriaSelecionada) {
-		this.categoriaSelecionada = categoriaSelecionada;
 	}
 
 	public ProdutoConfig getProdutoConfig() {
@@ -124,10 +121,10 @@ public class PedidosController implements Serializable {
 	}
 
 	public void setProdutos(List<Produto> produtos) {
-		if (produtos != null && !produtos.isEmpty()) {
-			RequestContext.getCurrentInstance().update("produtosGRID");
-		}
 		this.produtos = produtos;
+		setTamanhosDisponiveis(null);
+		setSaboresDisponiveis(null);
+		setProdutoSelecionado(null);
 	}
 
 	public List<ProdutoTamanho> getTamanhosDisponiveis() {
@@ -136,10 +133,8 @@ public class PedidosController implements Serializable {
 
 	public void setTamanhosDisponiveis(List<ProdutoTamanho> tamanhosDisponiveis) {
 		this.tamanhosDisponiveis = tamanhosDisponiveis;
-		if (tamanhosDisponiveis != null && !tamanhosDisponiveis.isEmpty()) {
-			RequestContext.getCurrentInstance().update("tamanho");
-			RequestContext.getCurrentInstance().update("tamanhoGrid");
-		}
+		RequestContext.getCurrentInstance().update("tamanho");
+		RequestContext.getCurrentInstance().update("tamanhoGrid");
 	}
 
 	public List<ProdutoSabor> getSaboresDisponiveis() {
@@ -148,9 +143,7 @@ public class PedidosController implements Serializable {
 
 	public void setSaboresDisponiveis(List<ProdutoSabor> saboresDisponiveis) {
 		this.saboresDisponiveis = saboresDisponiveis;
-		if (saboresDisponiveis != null && !saboresDisponiveis.isEmpty()) {
-			RequestContext.getCurrentInstance().update("sabores");
-		}
+		RequestContext.getCurrentInstance().update("sabores");
 	}
 
 	public List<ProdutoProdutoAdicional> getAdicionaisDisponiveis() {
@@ -160,12 +153,18 @@ public class PedidosController implements Serializable {
 	public void setAdicionaisDisponiveis(
 			List<ProdutoProdutoAdicional> adicionaisDisponiveis) {
 		this.adicionaisDisponiveis = adicionaisDisponiveis;
+		RequestContext.getCurrentInstance().update("adicionais");
 	}
 
 	public void adicionaPedido() {
 		if (getProdutoConfig() != null) {
 			if (!validate()) {
 				return;
+			}
+			if(this.quantidade >1)
+			{
+				produtoConfig.setQtd(quantidade);
+				setQuantidade(1);
 			}
 			produtoConfig.setProduto(produtoSelecionado);
 			this.produtosSelectionados.add(getProdutoConfig());
@@ -175,9 +174,10 @@ public class PedidosController implements Serializable {
 			setAdicionaisDisponiveis(null);
 			setTamanhosDisponiveis(null);
 			setSaboresDisponiveis(null);
+			RequestContext.getCurrentInstance().update("parentPanel");
 			facesContext.addMessage(null, new FacesMessage(
-					FacesMessage.SEVERITY_INFO, "Sucesso",
-					"Mesa aberta com sucesso"));
+					FacesMessage.SEVERITY_INFO, "Produto adicionado com sucesso",
+					"Produto adicionado com sucesso"));
 		}
 	}
 
@@ -242,37 +242,33 @@ public class PedidosController implements Serializable {
 
 	public String totalPedidos() {
 		BigDecimal precoTotal = BigDecimal.ZERO;
-		if(produtosSelectionados != null && !produtosSelectionados.isEmpty())
-		{
+		if (produtosSelectionados != null && !produtosSelectionados.isEmpty()) {
 			for (ProdutoConfig produtoProdutoAdicional : produtosSelectionados) {
-				precoTotal = precoTotal.add(produtoProdutoAdicional.getPrecoTtl());
+				precoTotal = precoTotal.add(produtoProdutoAdicional
+						.getPrecoTtl());
 			}
 		}
-		
-		return "R$ " + precoTotal.toString(); 
+
+		return "R$ " + precoTotal.toString();
 	}
-	
-	public void confirmaOrdem()
-	{
+
+	public void confirmaOrdem() {
 		Ordem ordem = new Ordem();
-		if(produtosSelectionados != null && !produtosSelectionados.isEmpty())
-		{
+		if (produtosSelectionados != null && !produtosSelectionados.isEmpty()) {
 			ItemOrdem itmOrdem = new ItemOrdem();
 			itmOrdem.setOrdem(ordem);
-			for(ProdutoConfig config : produtosSelectionados)
-			{
+			for (ProdutoConfig config : produtosSelectionados) {
 				ItemOrdemDet det = new ItemOrdemDet();
 				det.setProduto(config.getProduto());
 				det.setIdSabor(config.getSabor());
 				det.setIdTamanho(config.getTamanho());
 				det.setQuantidade(config.getQtd());
 				det.setDetalhe(config.getDetalhes());
-				if(config.getAdicionais() != null && !config.getAdicionais().isEmpty())
-				{
-					for(Integer adic : config.getAdicionais())
-					{
+				if (config.getAdicionais() != null
+						&& !config.getAdicionais().isEmpty()) {
+					for (String adic : config.getAdicionais()) {
 						ItemOrdemDetAdic itemAdic = new ItemOrdemDetAdic();
-						itemAdic.setIdProdutoAdic(adic);
+						itemAdic.setIdProdutoAdic(Integer.valueOf(adic));
 						det.addItemDetAdic(itemAdic);
 					}
 				}
@@ -281,13 +277,32 @@ public class PedidosController implements Serializable {
 			ordem.addItemOrdem(itmOrdem);
 			ordem.setStatus(0);
 			ordem.setDataOrdem(new Timestamp(System.currentTimeMillis()));
-			if(this.getIdMesa() != null)
-			{
+			if (this.getIdMesa() != null) {
 				ordem.setIdMesa(Integer.valueOf(this.getIdMesa()));
 			}
 			ordemService.criaOrdem(ordem);
-			// TODO adicionar à mesa, caso idMesa seja diferente de NULO
+			produtosSelectionados.clear();
+			RequestContext.getCurrentInstance().update("curr");
+			facesContext.addMessage(null, new FacesMessage(
+					FacesMessage.SEVERITY_INFO, "Pedido Enviado com sucesso",
+					"Pedido Enviado com sucesso"));
 		}
+	}
+
+	public Categoria getCategoriaSelecionada() {
+		return categoriaSelecionada;
+	}
+
+	public void setCategoriaSelecionada(Categoria categoriaSelecionada) {
+		this.categoriaSelecionada = categoriaSelecionada;
+	}
+
+	public int getQuantidade() {
+		return quantidade;
+	}
+
+	public void setQuantidade(int quantidade) {
+		this.quantidade = quantidade;
 	}
 
 }

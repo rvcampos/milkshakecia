@@ -169,6 +169,30 @@ public class Produto implements Serializable {
 		}
 		return null;
 	}
+	
+	public ProdutoProdutoAdicional getProdAdInfoByProdAd(ProdutoAdicional produtoAdicional) {
+		if (produtoAdicional != null && this.getSabores() != null) {
+			for (ProdutoProdutoAdicional produtoAdicionalP : this.getProdutosAdicionais()) {
+				if (produtoAdicionalP.getProdutoAdicional().getIdProdutoAdicional()
+						.equals(produtoAdicional.getIdProdutoAdicional())) {
+					return produtoAdicionalP;
+				}
+			}
+		}
+		return null;
+	}
+	
+	public ProdutoProdutoAdicional getProdAdInfoByProdAdicionalId(Integer produtoAdicional) {
+		if (produtoAdicional != null && this.getSabores() != null) {
+			for (ProdutoProdutoAdicional produtoAdicionalP : this.getProdutosAdicionais()) {
+				if (produtoAdicionalP.getProdutoAdicional().getIdProdutoAdicional()
+						.equals(produtoAdicional)) {
+					return produtoAdicionalP;
+				}
+			}
+		}
+		return null;
+	}
 
 	@Override
 	public String toString() {

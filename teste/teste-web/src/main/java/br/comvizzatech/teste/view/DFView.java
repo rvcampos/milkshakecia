@@ -36,12 +36,23 @@ public class DFView {
 		viewPedidoModal(null);
 	}
 
-	public void viewFechaConta() {
+	public void viewFechaConta(Integer idMesa) {
 		Map<String, Object> options = new HashMap<String, Object>();
 		options.put("modal", true);
 		options.put("draggable", false);
 		options.put("resizable", false);
 		options.put("contentHeight", 320);
+		
+		options.put("contentHeight", 720);
+		options.put("contentWidth", 1280);
+		options.put("includeViewParams", true);
+		
+		Map<String, List<String>> params = new HashMap<String, List<String>>();
+		if (idMesa != null) {
+			List<String> values = new ArrayList<String>();
+			values.add(idMesa.toString());
+			params.put("idMesa", values);
+		}
 
 		RequestContext.getCurrentInstance().openDialog("viewFechaConta",
 				options, null);

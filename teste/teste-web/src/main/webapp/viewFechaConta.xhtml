@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -17,20 +18,22 @@
 <h:body>
 
 	<p:growl autoUpdate="true" globalOnly="false" />
-	<p:menubar>
-		<p:menuitem value="HOME" outcome="/index.xhtmlOld" icon="ui-icon-home" />
-		<p:menuitem value="MESA" outcome="mesa.xhtml" icon="" />
-		<p:menuitem value="BALCÃO" outcome="/balcao.xhtml" icon="" />
-		<p:menuitem value="PRODUTOS" outcome="/produto.xhtml" icon="" />
-	</p:menubar>
+
+	<script type="text/javascript">
+    function handleDrop(event, ui) {
+        var droppedCar = ui.draggable;
+ 
+        droppedCar.fadeOut('fast');
+    }
+</script>
 
 	<h:form id="form">
-		<p:layout style="min-width:900px;min-height:900px;">
+		<p:layout style="min-width:600px;min-height:600px;">
 			<p:layoutUnit position="west" size="30%">
-				<p:dataTable value="#{pedidosView.produtosSelecionados}" var="prods"
+				<p:dataTable value="#{mesaStatusView.mesa.pedidosMesa}" var="ord"
 					id="curr">
 					<p:column headerText="Produto">
-						<h:outputText value="#{prods.printProdutoInfo()}" />
+						<h:outputText value="#{ord.itemOrdems.printProdutoInfo()}" />
 					</p:column>
 					<p:column headerText="Qtd" width="20%" style="text-align:center">
 						<p:commandLink action="#{prods.remQty()}" styleClass="fa fa-minus"
@@ -57,7 +60,7 @@
 							<p:commandButton value="Sim"
 								action="#{pedidosView.confirmaOrdem()}"
 								oncomplete="PF('confirmDialog').hide()" update=":form:curr" />
-							<p:commandButton value="Não"
+							<p:commandButton value="Not Yet"
 								onclick="PF('confirmDialog').hide();" type="button" />
 						</p:confirmDialog>
 					</f:facet>
@@ -143,12 +146,7 @@
 									</p:selectManyCheckbox>
 								</h:panelGrid>
 							</p:fieldset>
-							<h:outputLabel for="quantidade" value="Quantidade:" style="font-weight:bold"/>   
-							<p:inputText value="${pedidosView.quantidade}" id="quantidade"
-								rendered="#{not empty pedidosView.produtoSelecionado}"
-								label="Quantidade" title="Quantidade">
-								<f:validateDoubleRange minimum="0" maximum="1000" />
-							</p:inputText>
+							<p:inputText value="${pedidosView.quantidade}" id="quantidade" rendered="#{not empty pedidosView.produtoSelecionado}"/>
 						</p:panel>
 					</p:panel>
 				</h:panelGroup>

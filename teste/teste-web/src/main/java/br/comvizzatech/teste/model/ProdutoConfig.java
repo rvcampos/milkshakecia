@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import br.comvizzatech.teste.model.produtos.Produto;
+import br.comvizzatech.teste.model.produtos.ProdutoProdutoAdicional;
 import br.comvizzatech.teste.model.produtos.ProdutoSabor;
 import br.comvizzatech.teste.model.produtos.ProdutoTamanho;
 
@@ -15,7 +16,7 @@ public class ProdutoConfig {
 	private Integer sabor;
 	private int idCombo;
 	private int idxCombo;
-	private List<Integer> adicionais;
+	private List<String> adicionais;
 	private int qtd = 1;
 
 	public int getId() {
@@ -66,11 +67,11 @@ public class ProdutoConfig {
 		this.idxCombo = idxCombo;
 	}
 
-	public List<Integer> getAdicionais() {
+	public List<String> getAdicionais() {
 		return adicionais;
 	}
 
-	public void setAdicionais(List<Integer> adicionais) {
+	public void setAdicionais(List<String> adicionais) {
 		this.adicionais = adicionais;
 	}
 
@@ -90,6 +91,21 @@ public class ProdutoConfig {
 		if (sabor != null) {
 			ProdutoSabor prdSabor = produto.getSaborInfoBySaborId(sabor);
 			desc.append(" ").append(prdSabor.getSabor().getNome());
+		}
+		
+		if (adicionais != null) {
+			desc.append(" c/ ");
+			boolean first = true;
+			for(String i : adicionais)
+			{
+				ProdutoProdutoAdicional prdSabor = produto.getProdAdInfoByProdAdicionalId(Integer.valueOf(i));
+				if(!first)
+				{
+					desc.append(",");
+				}
+				desc.append("\n").append(prdSabor.getProdutoAdicional().getNome());
+				first = false;
+			}
 		}
 
 		return desc.toString();
@@ -116,6 +132,15 @@ public class ProdutoConfig {
 			ProdutoSabor prdSabor = produto.getSaborInfoBySaborId(sabor);
 			if (prdSabor.getPrecoAdicional() != null) {
 				dec = dec.add(prdSabor.getPrecoAdicional());
+			}
+		}
+		if(adicionais != null && !adicionais.isEmpty())
+		{
+			Short qtdAdIncl = produto.getQtdAdicionalIncluso();
+			if(qtdAdIncl < adicionais.size())
+			{
+				int qtd = adicionais.size() - qtdAdIncl;
+				dec = dec.add(produto.getPrecoAdicional().multiply(BigDecimal.valueOf(qtd)));
 			}
 		}
 		dec = dec.multiply(BigDecimal.valueOf(qtd));

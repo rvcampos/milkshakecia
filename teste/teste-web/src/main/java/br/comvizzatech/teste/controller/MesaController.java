@@ -64,7 +64,7 @@ public class MesaController {
 			facesContext.addMessage(null, m);
 		}
 	}
-
+	
 	private String getRootErrorMessage(Exception e) {
 		// Default to general error message that registration failed.
 		String errorMessage = "Falha ao realizar ação em mesa";

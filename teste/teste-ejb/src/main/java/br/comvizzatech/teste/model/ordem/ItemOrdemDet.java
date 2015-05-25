@@ -1,6 +1,7 @@
 package br.comvizzatech.teste.model.ordem;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import br.comvizzatech.teste.model.produtos.Produto;
+import br.comvizzatech.teste.model.produtos.ProdutoProdutoAdicional;
+import br.comvizzatech.teste.model.produtos.ProdutoSabor;
+import br.comvizzatech.teste.model.produtos.ProdutoTamanho;
 
 /**
  * The persistent class for the "ITEM_ORDEM_DET" database table.
@@ -129,6 +133,72 @@ public class ItemOrdemDet implements Serializable {
 		}
 		itemOrdemDetAdic.setItemOrdemDet(this);
 		this.itemDetAdic.add(itemOrdemDetAdic);
+	}
+	
+	public String printProdutoDetalhes()
+	{
+		StringBuilder desc = new StringBuilder(produto.getNome());
+		if (getIdTamanho() != null) {
+			ProdutoTamanho prdTamanho = produto
+					.getTamanhoInfoByTamanhoId(getIdTamanho());
+			desc.append(" ").append(prdTamanho.getTamanho().getNome());
+		}
+
+		if (getIdSabor() != null) {
+			ProdutoSabor prdSabor = produto.getSaborInfoBySaborId(getIdSabor());
+			desc.append(" ").append(prdSabor.getSabor().getNome());
+		}
+		
+		if (getItemDetAdic() != null) {
+			desc.append(" c/ ");
+			boolean first = true;
+			for(ItemOrdemDetAdic i : getItemDetAdic())
+			{
+				ProdutoProdutoAdicional prdSabor = produto.getProdAdInfoByProdAdicionalId(Integer.valueOf(i.getIdProdutoAdic()));
+				if(!first)
+				{
+					desc.append(",");
+				}
+				desc.append("\n").append(prdSabor.getProdutoAdicional().getNome());
+				first = false;
+			}
+		}
+		return detalhe.toString();
+	}
+	
+	public BigDecimal calculaPrecoProduto()
+	{
+		BigDecimal dec = BigDecimal.ZERO;
+		if (produto.getPrecoPadrao() != null) {
+			dec = produto.getPrecoPadrao();
+		}
+
+		if (getIdTamanho() != null) {
+			ProdutoTamanho prdTamanho = produto
+					.getTamanhoInfoByTamanhoId(getIdTamanho());
+			if (prdTamanho.getPreco() != null) {
+				dec = prdTamanho.getPreco();
+			}
+		}
+
+		if (getIdSabor() != null) {
+			ProdutoSabor prdSabor = produto.getSaborInfoBySaborId(getIdSabor());
+			if (prdSabor.getPrecoAdicional() != null) {
+				dec = dec.add(prdSabor.getPrecoAdicional());
+			}
+		}
+		if(getItemDetAdic() != null && !getItemDetAdic().isEmpty())
+		{
+			Short qtdAdIncl = produto.getQtdAdicionalIncluso();
+			if(qtdAdIncl < getItemDetAdic().size())
+			{
+				int qtd = getItemDetAdic().size() - qtdAdIncl;
+				dec = dec.add(produto.getPrecoAdicional().multiply(BigDecimal.valueOf(qtd)));
+			}
+		}
+		dec = dec.multiply(BigDecimal.valueOf(quantidade));
+		
+		return dec;
 	}
 
 }

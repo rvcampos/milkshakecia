@@ -51,7 +51,7 @@
 								target="#{pedidosView.selectedMesa}" />
 						</p:commandButton>
 						<p:commandButton id="fecharMesaBtn" rendered="#{!mesa.status}"
-							value="Abrir Mesa" action="${mesaController.abreFechaMesa(mesa)}"
+							value="Fechar Mesa" action="${mesaController.abreFechaMesa(mesa)}"
 							style="width:145px" update=":form:gridMesas">
 							<f:setPropertyActionListener value="#{mesa}"
 								target="#{selectedMesa}" />

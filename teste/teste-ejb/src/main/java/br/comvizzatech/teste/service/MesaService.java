@@ -14,7 +14,6 @@ import br.comvizzatech.teste.model.historico.MesaHistorico;
 import br.comvizzatech.teste.model.historico.MesaHistoricoPK;
 import br.comvizzatech.teste.model.mesa.Mesa;
 import br.comvizzatech.teste.model.ordem.Ordem;
-teste.model.mesa.Mesa;
 
 @Stateless
 public class MesaService {
@@ -27,6 +26,11 @@ public class MesaService {
 
 	@Inject
 	private Event<Mesa> mesaEventSrc;
+	
+	public Mesa getMesaById(Integer idMesa)
+	{
+		return em.find(Mesa.class, idMesa);
+	}
 
 	public void abreMesa(Mesa mesa) throws Exception {
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());

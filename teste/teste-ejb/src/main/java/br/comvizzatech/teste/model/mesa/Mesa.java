@@ -80,4 +80,12 @@ public class Mesa implements Serializable {
 		this.status = status;
 	}
 
+	public List<Ordem> getPedidosMesa() {
+		return pedidosMesa;
+	}
+
+	public void setPedidosMesa(List<Ordem> pedidosMesa) {
+		this.pedidosMesa = pedidosMesa;
+	}
+
 }
