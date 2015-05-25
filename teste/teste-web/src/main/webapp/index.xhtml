@@ -8,28 +8,5 @@
 	template="/WEB-INF/templates/default.xhtml">
 
 	<ui:define name="content">
-		<h2>Members</h2>
-		<h:panelGroup rendered="#{empty produtos}">
-			<em>Sem produtos registrados</em>
-		</h:panelGroup>
-		<h:dataTable var="_produto" value="produtos"
-			rendered="#{not empty produtos}" styleClass="simpletablestyle">
-			<h:column>
-				<f:facet name="header">Id</f:facet>
-                #{_member.idProduto}
-            </h:column>
-			<h:column>
-				<f:facet name="header">Name</f:facet>
-                #{_member.nome}
-            </h:column>
-			<h:column>
-				<f:facet name="header">Categoria</f:facet>
-                #{_member.categoria.nome}
-            </h:column>
-			<h:column>
-				<f:facet name="header">Preço Padrão</f:facet>
-                #{_member.precoPadrao}
-            </h:column>
-		</h:dataTable>
 	</ui:define>
 </ui:composition>

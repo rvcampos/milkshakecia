@@ -147,5 +147,19 @@ public class Ordem implements Serializable {
 		ordh.setIdOrdem(idOrdem);
 		return ordh;
 	}
+	
+	public List<ItemOrdemDet> getAllItemOrdemDet()
+	{
+		List<ItemOrdemDet> detalhes = new ArrayList<ItemOrdemDet>();
+		for(ItemOrdem itm : itemOrdems)
+		{
+			if(!itm.getCancelado())
+			{
+				detalhes.addAll(itm.getItemOrdemDet());
+			}
+		}
+		return detalhes;
+	}
+	
 
 }

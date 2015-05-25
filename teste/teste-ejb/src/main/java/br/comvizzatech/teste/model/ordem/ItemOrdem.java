@@ -83,4 +83,11 @@ public class ItemOrdem {
 	public void setItemOrdemDet(List<ItemOrdemDet> itemOrdemDet) {
 		this.itemOrdemDet = itemOrdemDet;
 	}
+	
+	public String printProdutoInfo()
+	{
+		StringBuilder bldr = new StringBuilder();
+		
+		return bldr.toString();
+	}
 }

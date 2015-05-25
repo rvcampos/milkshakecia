@@ -298,6 +298,8 @@ public class PedidosController implements Serializable {
 						"Falha ao realizar pedido, atualize a página"));
 			}
 			produtosSelectionados.clear();
+			produtos.clear();
+			RequestContext.getCurrentInstance().update("curr");
 			RequestContext.getCurrentInstance().update("currentItems");
 		}
 	}

@@ -3,6 +3,7 @@ package br.comvizzatech.teste.model.mesa;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -15,6 +16,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import br.comvizzatech.teste.model.ordem.ItemOrdemDet;
 import br.comvizzatech.teste.model.ordem.Ordem;
 
 /**
@@ -86,6 +88,20 @@ public class Mesa implements Serializable {
 
 	public void setPedidosMesa(List<Ordem> pedidosMesa) {
 		this.pedidosMesa = pedidosMesa;
+	}
+
+	public List<ItemOrdemDet> getAllItems() {
+		List<ItemOrdemDet> produtos = new ArrayList<ItemOrdemDet>();
+		if (getPedidosMesa() != null) {
+
+			for (Ordem ordem : getPedidosMesa()) {
+				if(ordem.getStatus() != -1)
+				{
+					produtos.addAll(ordem.getAllItemOrdemDet());
+				}
+			}
+		}
+		return produtos;
 	}
 
 }

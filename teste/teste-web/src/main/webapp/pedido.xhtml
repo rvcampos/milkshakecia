@@ -19,165 +19,162 @@
 
 	<p:growl autoUpdate="true" globalOnly="false" />
 
-	<script type="text/javascript">
-    function handleDrop(event, ui) {
-        var droppedCar = ui.draggable;
- 
-        droppedCar.fadeOut('fast');
-    }
-</script>
-
 	<h:form id="form">
-		<p:layout style="min-width:600px;min-height:600px;">
-			<p:layoutUnit position="west" size="30%">
-				<p:dataTable value="#{pedidosView.produtosSelecionados}" var="prods"
-					id="curr">
-					<p:column headerText="Produto">
-						<h:outputText value="#{prods.printProdutoInfo()}" />
-					</p:column>
-					<p:column headerText="Qtd" width="20%" style="text-align:center">
-						<p:commandLink action="#{prods.remQty()}" styleClass="fa fa-minus"
-							update=":form:curr">
-						</p:commandLink>
-						<h:outputText value=" #{prods.qtd} " />
-						<p:commandLink action="#{prods.addQty()}" styleClass="fa fa-plus"
-							update=":form:curr">
-						</p:commandLink>
-					</p:column>
-					<p:column headerText="Valor">
-						<h:outputText value=" ${prods.preco} " />
-						<p:commandLink styleClass="fa fa-remove"
-							action="#{pedidosView.removeProduto(prods)}" update=":form:curr" />
-					</p:column>
+		<p:panel id="addData">
+			<p:layout style="min-width:600px;min-height:600px;">
+				<p:layoutUnit position="west" size="30%">
+					<p:dataTable value="#{pedidosView.produtosSelecionados}"
+						var="prods" id="curr">
+						<p:column headerText="Produto">
+							<h:outputText value="#{prods.printProdutoInfo()}" />
+						</p:column>
+						<p:column headerText="Qtd" width="20%" style="text-align:center">
+							<p:commandLink action="#{prods.remQty()}"
+								styleClass="fa fa-minus" update=":form:curr">
+							</p:commandLink>
+							<h:outputText value=" #{prods.qtd} " />
+							<p:commandLink action="#{prods.addQty()}" styleClass="fa fa-plus"
+								update=":form:curr">
+							</p:commandLink>
+						</p:column>
+						<p:column headerText="Valor">
+							<h:outputText value=" ${prods.preco} " />
+							<p:commandLink styleClass="fa fa-remove"
+								action="#{pedidosView.removeProduto(prods)}"
+								update=":form:addData" />
+						</p:column>
 
-					<f:facet name="footer">  
+						<f:facet name="footer">  
             				Total: #{pedidosView.totalPedidos()}
             				    <p:commandButton value="Finalizar Pedido"
-							type="button" onclick="PF('confirmDialog').show()" />
-						<p:confirmDialog message="Deseja concluir o pedido?"
-							header="Conclusão de Pedido" severity="alert"
-							widgetVar="confirmDialog" appendTo="@(body)">
-							<p:commandButton value="Sim"
-								action="#{pedidosView.confirmaOrdem()}"
-								oncomplete="PF('confirmDialog').hide()" update=":form:curr" />
-							<p:commandButton value="Não"
-								onclick="PF('confirmDialog').hide();" type="button" />
-						</p:confirmDialog>
-					</f:facet>
-
-				</p:dataTable>
-				
-				<p:inputMask value="${pedidosView.cpf}" id="cpf"
-								 mask="999.999.999-99"
-								label="Quantidade" title="Quantidade">
-								<pe:keyFilter regEx="/[0-9_]/i" />
-							</p:inputMask>
-			</p:layoutUnit>
-
-			<p:layoutUnit position="center">
-
-				<h:messages styleClass="messages" errorClass="invalid"
-					infoClass="valid" warnClass="warning" globalOnly="true" />
-
-				<p:fieldset id="categorias" legend="Categorias"
-					rendered="#{empty pedidosView.categoriaSelecionada}">
-					<p:dataGrid id="categoriaGrid" var="cat"
-						value="#{pedidosView.categorias}" columns="3">
-						<p:commandButton id="escolheCategoria" value="#{cat.nome}"
-							style="width:145px" update=":form:parentPanel">
-							<f:setPropertyActionListener value="#{cat.produtos}"
-								target="#{pedidosView.produtos}" />
-						</p:commandButton>
-					</p:dataGrid>
-				</p:fieldset>
-
-				<h:panelGroup id="parentPanel">
-					<p:panel id="afterCategoriaSet"
-						rendered="#{not empty pedidosView.produtos}">
-						<p:fieldset id="produtos">
-							<p:dataGrid id="produtoGrid" var="prod"
-								value="#{pedidosView.produtos}" columns="2"
-								rendered="#{not empty pedidosView.produtos}">
-								<p:commandButton id="escolheProduto" value="#{prod.nome}"
-									style="width:145px" update=":form:afterProdutoSet">
-									<f:setPropertyActionListener value="#{prod}"
-										target="#{pedidosView.produtoSelecionado}" />
-									<f:ajax render="afterProdutoSet" />
+								type="button" onclick="PF('confirmDialog').show()" />
+							<p:confirmDialog message="Deseja concluir o pedido?"
+								header="Conclusão de Pedido" severity="alert"
+								widgetVar="confirmDialog" appendTo="@(body)">
+								<p:commandButton value="Sim"
+									action="#{pedidosView.confirmaOrdem()}"
+									oncomplete="PF('confirmDialog').hide()" update=":form:addData"
+									process="@this">
 								</p:commandButton>
-							</p:dataGrid>
-						</p:fieldset>
+								<p:commandButton value="Não"
+									onclick="PF('confirmDialog').hide();" type="button" />
+							</p:confirmDialog>
+						</f:facet>
 
-						<p:panel id="afterProdutoSet">
-							<p:fieldset id="tamanho" legend="Tamanho"
-								rendered="#{not empty pedidosView.tamanhosDisponiveis}">
-								<h:panelGrid columns="2" id="tamanhoGrid">
-									<p:selectOneRadio id="tamanhoId"
-										rendered="#{not empty pedidosView.tamanhosDisponiveis}"
-										value="#{pedidosView.produtoConfig.tamanho}" layout="grid"
-										columns="1">
-										<f:selectItems value="#{pedidosView.tamanhosDisponiveis}"
-											var="tam"
-											itemLabel="#{tam.tamanho.sigla} - #{tam.tamanho.nome} - #{tam.precoStr}"
-											itemValue="#{tam.tamanho.idTamanho}" />
-									</p:selectOneRadio>
-								</h:panelGrid>
+					</p:dataTable>
+					<h:outputLabel for="cpf" value="CPF: " style="font-weight:bold" />
+					<p:inputMask value="${pedidosView.cpf}" id="cpf"
+						mask="999.999.999-99" label="Quantidade" title="Quantidade">
+						<pe:keyFilter regEx="/[0-9_]/i" />
+					</p:inputMask>
+				</p:layoutUnit>
 
+				<p:layoutUnit position="center">
+
+					<h:messages styleClass="messages" errorClass="invalid"
+						infoClass="valid" warnClass="warning" globalOnly="true" />
+
+					<p:fieldset id="categorias" legend="Categorias"
+						rendered="#{empty pedidosView.categoriaSelecionada}">
+						<p:dataGrid id="categoriaGrid" var="cat"
+							value="#{pedidosView.categorias}" columns="3">
+							<p:commandButton id="escolheCategoria" value="#{cat.nome}"
+								style="width:145px" update=":form:parentPanel">
+								<f:setPropertyActionListener value="#{cat.produtos}"
+									target="#{pedidosView.produtos}" />
+							</p:commandButton>
+						</p:dataGrid>
+					</p:fieldset>
+
+					<h:panelGroup id="parentPanel">
+						<p:panel id="afterCategoriaSet"
+							rendered="#{not empty pedidosView.produtos}">
+							<p:fieldset id="produtos">
+								<p:dataGrid id="produtoGrid" var="prod"
+									value="#{pedidosView.produtos}" columns="2"
+									rendered="#{not empty pedidosView.produtos}">
+									<p:commandButton id="escolheProduto" value="#{prod.nome}"
+										style="width:145px" update=":form:afterProdutoSet">
+										<f:setPropertyActionListener value="#{prod}"
+											target="#{pedidosView.produtoSelecionado}" />
+										<f:ajax render="afterProdutoSet" />
+									</p:commandButton>
+								</p:dataGrid>
 							</p:fieldset>
 
+							<p:panel id="afterProdutoSet">
+								<p:fieldset id="tamanho" legend="Tamanho"
+									rendered="#{not empty pedidosView.tamanhosDisponiveis}">
+									<h:panelGrid columns="2" id="tamanhoGrid">
+										<p:selectOneRadio id="tamanhoId"
+											rendered="#{not empty pedidosView.tamanhosDisponiveis}"
+											value="#{pedidosView.produtoConfig.tamanho}" layout="grid"
+											columns="1">
+											<f:selectItems value="#{pedidosView.tamanhosDisponiveis}"
+												var="tam"
+												itemLabel="#{tam.tamanho.sigla} - #{tam.tamanho.nome} - #{tam.precoStr}"
+												itemValue="#{tam.tamanho.idTamanho}" />
+										</p:selectOneRadio>
+									</h:panelGrid>
 
-							<p:fieldset id="sabores" legend="Sabores"
-								rendered="#{not empty pedidosView.saboresDisponiveis}">
-								<h:panelGrid columns="3" id="saborGrid" title="Sabores"
+								</p:fieldset>
+
+
+								<p:fieldset id="sabores" legend="Sabores"
 									rendered="#{not empty pedidosView.saboresDisponiveis}">
-									<p:selectOneMenu id="saborId" label="Sabores"
-										value="#{pedidosView.produtoConfig.sabor}">
-										<f:selectItem itemValue="#{null}"
-											itemLabel="-- Selecione um Sabor --" noSelectionOption="true" />
-										<f:selectItems value="#{pedidosView.saboresDisponiveis}"
-											var="sab" itemLabel="#{sab.sabor.nome}"
-											itemValue="#{sab.sabor.idSabor}" />
-									</p:selectOneMenu>
-								</h:panelGrid>
-							</p:fieldset>
+									<h:panelGrid columns="3" id="saborGrid" title="Sabores"
+										rendered="#{not empty pedidosView.saboresDisponiveis}">
+										<p:selectOneMenu id="saborId" label="Sabores"
+											value="#{pedidosView.produtoConfig.sabor}">
+											<f:selectItem itemValue="#{null}"
+												itemLabel="-- Selecione um Sabor --"
+												noSelectionOption="true" />
+											<f:selectItems value="#{pedidosView.saboresDisponiveis}"
+												var="sab" itemLabel="#{sab.sabor.nome}"
+												itemValue="#{sab.sabor.idSabor}" />
+										</p:selectOneMenu>
+									</h:panelGrid>
+								</p:fieldset>
 
-							<p:fieldset id="adicionais" legend="Adicionais"
-								rendered="#{not empty pedidosView.adicionaisDisponiveis}">
-								<h:panelGrid columns="3" id="adicionaisGrid" title="Adicionais">
-									<p:selectManyCheckbox id="adicionaisId" label="Adicionais"
-										value="#{pedidosView.produtoConfig.adicionais}" layout="grid"
-										columns="3">
-										<f:selectItems value="#{pedidosView.adicionaisDisponiveis}"
-											var="sab" itemLabel="#{sab.produtoAdicional.nome}"
-											itemValue="#{sab.produtoAdicional.idProdutoAdicional}" />
-									</p:selectManyCheckbox>
-								</h:panelGrid>
-							</p:fieldset>
-							<h:outputLabel for="quantidade" value="Quantidade:" style="font-weight:bold"/>   
-							<p:inputMask value="${pedidosView.quantidade}" id="quantidade"
-								rendered="#{not empty pedidosView.produtoSelecionado}"
-								 mask="9*"
-								label="Quantidade" title="Quantidade" maxlength="6">
-								<pe:keyFilter regEx="/[0-9_]/i" />
-							</p:inputMask>
+								<p:fieldset id="adicionais" legend="Adicionais"
+									rendered="#{not empty pedidosView.adicionaisDisponiveis}">
+									<h:panelGrid columns="3" id="adicionaisGrid" title="Adicionais">
+										<p:selectManyCheckbox id="adicionaisId" label="Adicionais"
+											value="#{pedidosView.produtoConfig.adicionais}" layout="grid"
+											columns="3">
+											<f:selectItems value="#{pedidosView.adicionaisDisponiveis}"
+												var="sab" itemLabel="#{sab.produtoAdicional.nome}"
+												itemValue="#{sab.produtoAdicional.idProdutoAdicional}" />
+										</p:selectManyCheckbox>
+									</h:panelGrid>
+								</p:fieldset>
+								<h:outputLabel for="quantidade" value="Quantidade:"
+									style="font-weight:bold" />
+								<p:inputMask value="${pedidosView.quantidade}" id="quantidade"
+									rendered="#{not empty pedidosView.produtoSelecionado}"
+									label="Quantidade" title="Quantidade" maxlength="6">
+									<pe:keyFilter regEx="/[0-9_]/i" />
+								</p:inputMask>
+							</p:panel>
 						</p:panel>
-					</p:panel>
-				</h:panelGroup>
+					</h:panelGroup>
 
-				<p:commandButton id="Adicionar" label="Adicionar produto"
-					value="Adicionar produto" name="Adicionar produto"
-					action="#{pedidosView.adicionaPedido()}"
-					update=":form:produtoGrid :form:tamanhoGrid :form:saborGrid :form:curr"
-					onclick="PF('afterCategoriaSet').hide()">
-				</p:commandButton>
-
-				<div id="hidBtn" hidden="true">
-					<p:commandButton id="concluiordem"
-						action="#{pedidosView.confirmaOrdem()}"
-						update=":form:produtoGrid :form:tamanhoGrid :form:saborGrid :form:curr">
+					<p:commandButton id="Adicionar" label="Adicionar produto"
+						value="Adicionar produto" name="Adicionar produto"
+						action="#{pedidosView.adicionaPedido()}"
+						update=":form:produtoGrid :form:tamanhoGrid :form:saborGrid :form:curr"
+						onclick="PF('afterCategoriaSet').hide()">
 					</p:commandButton>
-				</div>
-			</p:layoutUnit>
-		</p:layout>
+
+					<div id="hidBtn" hidden="true">
+						<p:commandButton id="concluiordem"
+							action="#{pedidosView.confirmaOrdem()}"
+							update=":form:produtoGrid :form:tamanhoGrid :form:saborGrid :form:curr">
+						</p:commandButton>
+					</div>
+				</p:layoutUnit>
+			</p:layout>
+		</p:panel>
 	</h:form>
 </h:body>
 </html>
