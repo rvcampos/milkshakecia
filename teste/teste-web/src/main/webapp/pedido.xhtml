@@ -3,7 +3,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
 
 <h:head>
 	<title>#{pedidosView.pageTitle}</title>
@@ -65,6 +66,12 @@
 					</f:facet>
 
 				</p:dataTable>
+				
+				<p:inputMask value="${pedidosView.cpf}" id="cpf"
+								 mask="999.999.999-99"
+								label="Quantidade" title="Quantidade">
+								<pe:keyFilter regEx="/[0-9_]/i" />
+							</p:inputMask>
 			</p:layoutUnit>
 
 			<p:layoutUnit position="center">
@@ -145,7 +152,13 @@
 									</p:selectManyCheckbox>
 								</h:panelGrid>
 							</p:fieldset>
-							<p:inputText value="${pedidosView.quantidade}" id="quantidade" rendered="#{not empty pedidosView.produtoSelecionado}"/>
+							<h:outputLabel for="quantidade" value="Quantidade:" style="font-weight:bold"/>   
+							<p:inputMask value="${pedidosView.quantidade}" id="quantidade"
+								rendered="#{not empty pedidosView.produtoSelecionado}"
+								 mask="9*"
+								label="Quantidade" title="Quantidade" maxlength="6">
+								<pe:keyFilter regEx="/[0-9_]/i" />
+							</p:inputMask>
 						</p:panel>
 					</p:panel>
 				</h:panelGroup>

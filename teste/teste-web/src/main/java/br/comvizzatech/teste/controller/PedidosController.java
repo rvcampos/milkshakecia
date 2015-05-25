@@ -66,8 +66,10 @@ public class PedidosController implements Serializable {
 	private List<ProdutoSabor> saboresDisponiveis;
 
 	private List<ProdutoProdutoAdicional> adicionaisDisponiveis;
-	
+
 	private int quantidade;
+
+	private String cpf;
 
 	@PostConstruct
 	public void init() {
@@ -161,8 +163,7 @@ public class PedidosController implements Serializable {
 			if (!validate()) {
 				return;
 			}
-			if(this.quantidade >1)
-			{
+			if (this.quantidade > 1) {
 				produtoConfig.setQtd(quantidade);
 				setQuantidade(1);
 			}
@@ -176,7 +177,8 @@ public class PedidosController implements Serializable {
 			setSaboresDisponiveis(null);
 			RequestContext.getCurrentInstance().update("parentPanel");
 			facesContext.addMessage(null, new FacesMessage(
-					FacesMessage.SEVERITY_INFO, "Produto adicionado com sucesso",
+					FacesMessage.SEVERITY_INFO,
+					"Produto adicionado com sucesso",
 					"Produto adicionado com sucesso"));
 		}
 	}
@@ -277,15 +279,26 @@ public class PedidosController implements Serializable {
 			ordem.addItemOrdem(itmOrdem);
 			ordem.setStatus(0);
 			ordem.setDataOrdem(new Timestamp(System.currentTimeMillis()));
+			ordem.setDocumentoNota(cpf);
+			setCpf(null);
 			if (this.getIdMesa() != null) {
 				ordem.setIdMesa(Integer.valueOf(this.getIdMesa()));
 			}
-			ordemService.criaOrdem(ordem);
+			boolean criaOrdem = ordemService.criaOrdem(ordem);
+			if(criaOrdem)
+			{
+				facesContext.addMessage(null, new FacesMessage(
+						FacesMessage.SEVERITY_INFO, "Pedido Enviado com sucesso",
+						"Pedido Enviado com sucesso"));
+			}
+			else
+			{
+				facesContext.addMessage(null, new FacesMessage(
+						FacesMessage.SEVERITY_ERROR, "Falha ao realizar pedido, atualize a página",
+						"Falha ao realizar pedido, atualize a página"));
+			}
 			produtosSelectionados.clear();
-			RequestContext.getCurrentInstance().update("curr");
-			facesContext.addMessage(null, new FacesMessage(
-					FacesMessage.SEVERITY_INFO, "Pedido Enviado com sucesso",
-					"Pedido Enviado com sucesso"));
+			RequestContext.getCurrentInstance().update("currentItems");
 		}
 	}
 
@@ -303,6 +316,14 @@ public class PedidosController implements Serializable {
 
 	public void setQuantidade(int quantidade) {
 		this.quantidade = quantidade;
+	}
+
+	public String getCpf() {
+		return cpf;
+	}
+
+	public void setCpf(String cpf) {
+		this.cpf = cpf;
 	}
 
 }
