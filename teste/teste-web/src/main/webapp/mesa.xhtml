@@ -52,7 +52,7 @@
 						</p:commandButton>
 						<p:commandButton id="fecharMesaBtn" rendered="#{!mesa.status}"
 							value="Fechar Mesa" actionListener="#{dFView.viewFechaConta(mesa.idMesa)}"
-							style="width:145px" update=":form:gridMesas">
+							style="width:145px" update=":form:gridMesas" >
 							<f:setPropertyActionListener value="#{mesa}"
 								target="#{selectedMesa}" />
 						</p:commandButton>

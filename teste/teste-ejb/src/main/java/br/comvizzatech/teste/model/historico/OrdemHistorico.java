@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -107,6 +108,10 @@ public class OrdemHistorico implements Serializable {
 
 	public ItemOrdemHistorico addItemOrdemHistorico(
 			ItemOrdemHistorico itemOrdemHistorico) {
+		if(getItemOrdemHistoricos() == null)
+		{
+			setItemOrdemHistoricos(new ArrayList<ItemOrdemHistorico>());
+		}
 		getItemOrdemHistoricos().add(itemOrdemHistorico);
 		itemOrdemHistorico.setOrdemHistorico(this);
 

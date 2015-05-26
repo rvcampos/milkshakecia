@@ -258,8 +258,8 @@ public class PedidosController implements Serializable {
 	public void setPageTitle(String pageTitle) {
 		this.pageTitle = pageTitle;
 	}
-
-	public String totalPedidos() {
+	
+	public Double totalPedidosAsDouble() {
 		BigDecimal precoTotal = BigDecimal.ZERO;
 		if (produtosSelectionados != null && !produtosSelectionados.isEmpty()) {
 			for (ProdutoConfig produtoProdutoAdicional : produtosSelectionados) {
@@ -268,7 +268,11 @@ public class PedidosController implements Serializable {
 			}
 		}
 
-		return "R$ " + precoTotal.toString();
+		return precoTotal.doubleValue();
+	}
+
+	public String totalPedidos() {
+		return "R$ " + totalPedidosAsDouble().toString();
 	}
 
 	public void confirmaOrdem() {
@@ -308,7 +312,7 @@ public class PedidosController implements Serializable {
 						"Pedido Enviado com sucesso",
 						"Pedido Enviado com sucesso"));
 				if (this.getIdMesa() == null) {
-//					ECFHelper.emiteCupom(ordem, tpPagto, valorPago);
+					ECFHelper.emiteCupom(ordem, tpPagto, valorPago);
 				}
 			} else {
 				facesContext.addMessage(null, new FacesMessage(

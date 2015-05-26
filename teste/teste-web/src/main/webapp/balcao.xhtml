@@ -73,7 +73,7 @@
 					<h:outputLabel for="cpf" value="CPF: " style="font-weight:bold" />
 					<p:inputMask value="${pedidosView.cpf}" id="cpf"
 						mask="999.999.999-99" label="Quantidade" title="Quantidade">
-						<pe:keyFilter regEx="/[0-9_]/i" />
+						<pe:keyFilter regEx="/[0-9_]/i/." />
 					</p:inputMask>
 					<p />
 					<p:outputLabel for="console" value="Pagamento: " />
@@ -86,11 +86,10 @@
 					<p />
 					<h:outputLabel for="valorPago" value="Recebido: "
 						style="font-weight:bold" />
-					<p:inputText value="${pedidosView.valorPago}" id="valorPago"
+					<p:inputText value="#{pedidosView.valorPago}" id="valorPago"
 						immediate="true" label="Pago" title="Pago">
 						<pe:keyFilter regEx="/[0-9_]/i" />
 					</p:inputText>
-					<p />
 				</p:layoutUnit>
 
 				<p:layoutUnit position="center">

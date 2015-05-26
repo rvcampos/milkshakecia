@@ -41,7 +41,7 @@ public final class ECFHelper {
 				}
 			});
 			ecf.setModelo(2);
-			ecf.getDevice().setPorta("COM4");
+			ecf.getDevice().setPorta("COM5");
 			ecf.ativar();
 			ecf.corrigeEstadoErro(true);
 			ecf.carregaAliquotas();

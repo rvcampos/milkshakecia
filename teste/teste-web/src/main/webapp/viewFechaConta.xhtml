@@ -46,7 +46,7 @@
 							header="Conclusão de Pedido" severity="alert"
 							widgetVar="confirmDialog" appendTo="@(body)">
 							<p:commandButton value="Sim"
-								action="#{mesaStatusView.emiteCupom()}"
+								action="#{mesaStatusView.fechaMesa()}"
 								oncomplete="PF('confirmDialog').hide()" update=":form:curr" />
 							<p:commandButton value="Not Yet"
 								onclick="PF('confirmDialog').hide();" type="button" />

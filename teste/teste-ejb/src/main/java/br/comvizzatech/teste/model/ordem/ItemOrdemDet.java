@@ -280,7 +280,7 @@ public class ItemOrdemDet implements Serializable {
 		hist.setIdSabor(idSabor);
 		hist.setIdTamanho(idTamanho);
 		hist.setQuantidade(quantidade);
-		return null;
+		return hist;
 	}
 
 }

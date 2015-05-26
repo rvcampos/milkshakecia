@@ -7,10 +7,13 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+
+import org.primefaces.context.RequestContext;
 
 import br.comvizzatech.teste.model.FormaPagamento;
 import br.comvizzatech.teste.model.mesa.Mesa;
@@ -72,11 +75,58 @@ public class MesaStatusController {
 		return produtos;
 	}
 
-	public void emiteCupom() {
-		if(ECFHelper.emiteCupom(mesa, produtos,pgto,valorTotal))
+	public boolean emiteCupom() {
+		if(produtos == null || produtos.isEmpty())
 		{
-			mesaService.fechaMesa(mesa);
+			FacesMessage m = new FacesMessage(FacesMessage.SEVERITY_WARN,
+					"Mesa sem pedidos", "Falha ao fechar mesa");
+			return true;
 		}
+		return ECFHelper.emiteCupom(mesa, produtos,pgto,valorTotal);
+	}
+	
+	public boolean fechaMesa()
+	{
+		try {
+			if(emiteCupom())
+			{
+				mesaService.fechaMesa(mesa);
+				setProdutos(null);
+				RequestContext.getCurrentInstance().closeDialog("viewFechaConta");
+				return true;
+			}
+			else
+			{
+				FacesMessage m = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+						"Falha na emissão de cupom", "Falha ao fechar mesa");
+				facesContext.addMessage(null, m);
+			}
+		} catch (Exception e) {
+			String errorMessage = getRootErrorMessage(e);
+			FacesMessage m = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					errorMessage, "Falha ao fechar mesa");
+			facesContext.addMessage(null, m);
+		}
+		return false;
+	}
+	
+	private String getRootErrorMessage(Exception e) {
+		// Default to general error message that registration failed.
+		String errorMessage = "Falha ao realizar ação em mesa";
+		if (e == null) {
+			// This shouldn't happen, but return the default messages
+			return errorMessage;
+		}
+
+		// Start with the exception and recurse to find the root cause
+		Throwable t = e;
+		while (t != null) {
+			// Get the message from the Throwable class instance
+			errorMessage = t.getLocalizedMessage();
+			t = t.getCause();
+		}
+		// This is the root cause message
+		return errorMessage;
 	}
 
 	public Mesa getMesa() {

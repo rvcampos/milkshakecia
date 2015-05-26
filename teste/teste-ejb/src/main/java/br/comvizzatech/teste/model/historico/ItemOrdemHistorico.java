@@ -2,6 +2,7 @@ package br.comvizzatech.teste.model.historico;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -90,6 +91,10 @@ public class ItemOrdemHistorico implements Serializable {
 
 	public ItemOrdemDetHistorico addItemOrdemDetHistorico(
 			ItemOrdemDetHistorico itemOrdemDetHistorico) {
+		if(getItemOrdemDetHistoricos() == null)
+		{
+			setItemOrdemDetHistoricos(new ArrayList<ItemOrdemDetHistorico>());
+		}
 		getItemOrdemDetHistoricos().add(itemOrdemDetHistorico);
 		itemOrdemDetHistorico.setItemOrdemHistorico(this);
 

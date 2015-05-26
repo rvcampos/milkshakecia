@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 
 import br.comvizzatech.teste.model.historico.MesaHistorico;
 import br.comvizzatech.teste.model.historico.MesaHistoricoPK;
+import br.comvizzatech.teste.model.historico.OrdemHistorico;
 import br.comvizzatech.teste.model.mesa.Mesa;
 import br.comvizzatech.teste.model.ordem.Ordem;
 
@@ -55,7 +56,9 @@ public class MesaService {
 		if(ordens != null && !ordens.isEmpty())
 		{
 			for (Ordem ordem : ordens) {
-				ordem.criaHistorico(dataFechamento);
+				OrdemHistorico criaHistorico = ordem.criaHistorico(dataFechamento);
+				em.persist(criaHistorico);
+				em.remove(ordem);
 			}
 		}
 		// TODO adicionar pedidos da mesa
@@ -66,7 +69,7 @@ public class MesaService {
 	{
 		return em
 				.createQuery(
-						"select o from Ordem o where o.idMesa = :idMesa")
+						"select o from Ordem o where o.id_mesa = :idMesa")
 						.setParameter("idMesa", mesaId).getResultList();
 	}
 
