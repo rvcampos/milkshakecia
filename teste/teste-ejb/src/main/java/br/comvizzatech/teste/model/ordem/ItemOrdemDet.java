@@ -2,6 +2,7 @@ package br.comvizzatech.teste.model.ordem;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import br.comvizzatech.teste.model.historico.ItemOrdemDetHistorico;
 import br.comvizzatech.teste.model.produtos.Produto;
 import br.comvizzatech.teste.model.produtos.ProdutoProdutoAdicional;
 import br.comvizzatech.teste.model.produtos.ProdutoSabor;
@@ -211,6 +213,10 @@ public class ItemOrdemDet implements Serializable {
 	}
 	
 	public double getQtdAdicionaisCobrados() {
+		if(getItemDetAdic() == null)
+		{
+			return 0.0d;
+		}
 		Short qtdAdIncl = produto.getQtdAdicionalIncluso();
 		double qtd = 0;
 		if(qtdAdIncl < getItemDetAdic().size())
@@ -263,6 +269,18 @@ public class ItemOrdemDet implements Serializable {
 			nome += " " + prdTamanho.getTamanho().getNome();
 		}
 		return nome;
+	}
+
+	public ItemOrdemDetHistorico criaHistorico(Timestamp date) {
+		ItemOrdemDetHistorico hist = new ItemOrdemDetHistorico();
+		hist.setDetalhe(detalhe);
+		hist.setDtCriacao(date);
+		hist.setIdItemOrdemDet(idItemOrdemDet);
+		hist.setIdProduto(produto.getIdProduto());
+		hist.setIdSabor(idSabor);
+		hist.setIdTamanho(idTamanho);
+		hist.setQuantidade(quantidade);
+		return null;
 	}
 
 }

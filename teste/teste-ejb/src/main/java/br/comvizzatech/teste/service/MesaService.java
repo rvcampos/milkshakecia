@@ -54,7 +54,9 @@ public class MesaService {
 		List<Ordem> ordens = findOrdemByMesaId(mesa.getIdMesa());
 		if(ordens != null && !ordens.isEmpty())
 		{
-			
+			for (Ordem ordem : ordens) {
+				ordem.criaHistorico(dataFechamento);
+			}
 		}
 		// TODO adicionar pedidos da mesa
 		em.persist(hist);

@@ -1,6 +1,9 @@
 package br.comvizzatech.teste.controller;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -25,6 +28,8 @@ public class MesaStatusController {
 	private FacesContext facesContext;
 	@Inject
 	private OrdemService ordemService;
+	@Inject
+	private MesaService mesaService;
 
 	private Integer idMesa;
 	private Mesa mesa;
@@ -68,7 +73,10 @@ public class MesaStatusController {
 	}
 
 	public void emiteCupom() {
-		ECFHelper.emiteCupom(mesa, produtos,pgto,0d);
+		if(ECFHelper.emiteCupom(mesa, produtos,pgto,valorTotal))
+		{
+			mesaService.fechaMesa(mesa);
+		}
 	}
 
 	public Mesa getMesa() {
@@ -97,5 +105,18 @@ public class MesaStatusController {
 
 	public void setProdutos(List<ItemOrdemDet> produtos) {
 		this.produtos = produtos;
+	}
+	
+	public BigDecimal totalPedidos()
+	{
+		BigDecimal total = BigDecimal.ZERO;
+		if(produtos != null &&!produtos.isEmpty())
+		{
+			for (ItemOrdemDet produto : produtos) {
+				total = total.add(produto.calculaPrecoProduto());
+			}
+		}
+		
+		return total.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 	}
 }

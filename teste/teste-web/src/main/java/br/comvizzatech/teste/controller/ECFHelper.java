@@ -3,9 +3,7 @@ package br.comvizzatech.teste.controller;
 import jACBrFramework.ACBrEventListener;
 import jACBrFramework.ACBrException;
 import jACBrFramework.serial.ecf.ACBrECF;
-import jACBrFramework.serial.ecf.AbreCupomEventObject;
 import jACBrFramework.serial.ecf.FormaPagamento;
-import jACBrFramework.serial.ecf.VendeItemEventObject;
 
 import java.math.BigDecimal;
 import java.util.EventObject;
@@ -13,30 +11,29 @@ import java.util.List;
 
 import br.comvizzatech.teste.model.mesa.Mesa;
 import br.comvizzatech.teste.model.ordem.ItemOrdemDet;
+import br.comvizzatech.teste.model.ordem.Ordem;
 import br.comvizzatech.teste.model.produtos.Produto;
 
 public final class ECFHelper {
+	
+	public static synchronized boolean emiteCupom(Ordem ordem, int tpPagto, Double valorPago) {
+		if(tpPagto > 0)
+		{
+			valorPago= 0.0d;
+		}
+		return emiteCupom(null, ordem.getAllItemOrdemDet(),tpPagto, valorPago);
+		
+	}
 
-	public static synchronized void emiteCupom(Mesa mesa,
+	public static synchronized boolean emiteCupom(Mesa mesa,
 			List<ItemOrdemDet> produtos, int tpPagto, Double valorPago) {
 		ACBrECF ecf = null;
 		try {
+			if(tpPagto > 0)
+			{
+				valorPago= 0.0d;
+			}
 			ecf = new ACBrECF();
-			ecf.addOnAntesAbreCupom(new ACBrEventListener<AbreCupomEventObject>() {
-
-				public void notification(AbreCupomEventObject e) {
-					System.out.println(">> Evento OnAntesAbreCupom <<");
-				}
-			});
-
-			ecf.addOnDepoisVendeItem(new ACBrEventListener<VendeItemEventObject>() {
-
-				public void notification(VendeItemEventObject e) {
-					System.out.println(">> Evento OnDepoisVendeItem <<");
-					System.out.println(e.getCodigo() + " " + e.getDescricao());
-				}
-			});
-
 			ecf.addOnMsgPoucoPapel(new ACBrEventListener<EventObject>() {
 
 				public void notification(EventObject e) {
@@ -49,6 +46,7 @@ public final class ECFHelper {
 			ecf.corrigeEstadoErro(true);
 			ecf.carregaAliquotas();
 			efetuaVenda(ecf, produtos, tpPagto, valorPago);
+			return true;
 		} catch (ACBrException e) {
 			e.printStackTrace();
 		} finally {
@@ -60,13 +58,17 @@ public final class ECFHelper {
 				}
 			}
 		}
+		return false;
 	}
 
 	private static synchronized void efetuaVenda(ACBrECF ecf,
 			List<ItemOrdemDet> produtos, int tpPagto, Double valorPago)
 			throws ACBrException {
+		boolean cupomAberto = false;
 		try {
+			ecf.testaPodeAbrirCupom();
 			ecf.abreCupom();
+			cupomAberto = true;
 			for (ItemOrdemDet det : produtos) {
 				Produto produto = det.getProduto();
 				String descricao = det.getNomeComTamanho();
@@ -85,7 +87,10 @@ public final class ECFHelper {
 									.getPrecoAdicional().doubleValue(), 0,
 							"UN", "", "", 0);
 				}
-				valorPago += det.calculaPrecoProduto().doubleValue();
+				if(tpPagto > 0)
+				{
+					valorPago += det.calculaPrecoProduto().doubleValue();
+				}
 			}
 			ecf.subtotalizaCupom(0, "Total");
 			if (ecf.getFormasPagamento() == null) {
@@ -94,15 +99,14 @@ public final class ECFHelper {
 			FormaPagamento formaPagto = ecf.getFormasPagamento()[tpPagto];
 			ecf.efetuaPagamento(formaPagto.getIndice(), valorPago, "", false);
 			ecf.fechaCupom("Obrigado e Volte Sempre!!");
-		} catch (Exception e) {
 			ecf.cancelaCupom();
+		} catch (Exception e) {
+			if(cupomAberto)
+			{
+				ecf.cancelaCupom();
+			}
 			throw e;
 		} finally {
-			try {
-				ecf.cancelaCupom();
-			} catch (Exception e2) {
-				// TODO: handle exception
-			}
 		}
 
 	}

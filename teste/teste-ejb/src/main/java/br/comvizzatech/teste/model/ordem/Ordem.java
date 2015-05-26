@@ -137,6 +137,13 @@ public class Ordem implements Serializable {
 		ordh.setIndViagem(indViagem);
 		ordh.setIdMesa(id_mesa);
 		ordh.setIdOrdem(idOrdem);
+		if(getItemOrdems() != null)
+		{
+			for(ItemOrdem ord : getItemOrdems())
+			{
+				ordh.addItemOrdemHistorico(ord.criaHistorico(date));
+			}
+		}
 		return ordh;
 	}
 

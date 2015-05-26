@@ -1,8 +1,13 @@
 package br.comvizzatech.teste.model.historico;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
+import br.comvizzatech.teste.model.ordem.ItemOrdemDetAdic;
+
 import java.sql.Timestamp;
+import java.util.List;
 
 
 /**
@@ -39,7 +44,7 @@ public class ItemOrdemDetHistorico implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="id_item_ordem", referencedColumnName="id_item_ordem")
 	private ItemOrdemHistorico itemOrdemHistorico;
-
+	
 	public ItemOrdemDetHistorico() {
 	}
 

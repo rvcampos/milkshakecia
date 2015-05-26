@@ -1,6 +1,7 @@
 package br.comvizzatech.teste.model;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 import br.comvizzatech.teste.model.produtos.Produto;
@@ -154,7 +155,7 @@ public class ProdutoConfig {
 		}
 		StringBuilder preco = new StringBuilder("R$ ");
 
-		BigDecimal dec = getPrecoTtl();
+		BigDecimal dec = getPrecoTtl().setScale(2,BigDecimal.ROUND_HALF_EVEN);
 
 		preco.append(dec.toString());
 

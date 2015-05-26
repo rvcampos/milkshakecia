@@ -108,6 +108,10 @@ public class Produto implements Serializable {
 	}
 
 	public Short getQtdAdicionalIncluso() {
+		if(qtdAdicionalIncluso == null)
+		{
+			return 0;
+		}
 		return qtdAdicionalIncluso;
 	}
 

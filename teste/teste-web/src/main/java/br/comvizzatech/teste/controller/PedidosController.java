@@ -17,6 +17,7 @@ import org.primefaces.context.RequestContext;
 
 import br.comvizzatech.teste.data.rep.CategoriaRepository;
 import br.comvizzatech.teste.model.Categoria;
+import br.comvizzatech.teste.model.FormaPagamento;
 import br.comvizzatech.teste.model.ProdutoConfig;
 import br.comvizzatech.teste.model.mesa.Mesa;
 import br.comvizzatech.teste.model.ordem.ItemOrdem;
@@ -75,6 +76,12 @@ public class PedidosController implements Serializable {
 
 	private String cpf;
 
+	private Integer tpPagto;
+
+	private Double valorPago = 0.0d;
+
+	private static final List<FormaPagamento> pagtos = new ArrayList<FormaPagamento>();
+
 	@PostConstruct
 	public void init() {
 		categorias = service.findAllOrderedById();
@@ -83,6 +90,12 @@ public class PedidosController implements Serializable {
 			this.idMesa = facesContext.getExternalContext()
 					.getRequestParameterMap().get("idMesa");
 			this.pageTitle = "MESA " + idMesa;
+		}
+		if (pagtos.isEmpty()) {
+			pagtos.add(new FormaPagamento(0, "Dinheiro"));
+			pagtos.add(new FormaPagamento(1, "Débito"));
+			pagtos.add(new FormaPagamento(2, "Crédito"));
+			pagtos.add(new FormaPagamento(3, "Voucher"));
 		}
 		produtosSelectionados = new ArrayList<ProdutoConfig>();
 		produtoConfig = new ProdutoConfig();
@@ -294,6 +307,9 @@ public class PedidosController implements Serializable {
 						FacesMessage.SEVERITY_INFO,
 						"Pedido Enviado com sucesso",
 						"Pedido Enviado com sucesso"));
+				if (this.getIdMesa() == null) {
+//					ECFHelper.emiteCupom(ordem, tpPagto, valorPago);
+				}
 			} else {
 				facesContext.addMessage(null, new FacesMessage(
 						FacesMessage.SEVERITY_ERROR,
@@ -301,9 +317,12 @@ public class PedidosController implements Serializable {
 						"Falha ao realizar pedido, atualize a página"));
 			}
 			produtosSelectionados.clear();
-			produtos.clear();
+			setProdutos(null);
 			RequestContext.getCurrentInstance().update("curr");
 			RequestContext.getCurrentInstance().update("currentItems");
+			setCpf(null);
+			setTpPagto(0);
+			setValorPago(0.0d);
 		}
 	}
 
@@ -314,6 +333,30 @@ public class PedidosController implements Serializable {
 	public void setCategoriaSelecionada(Categoria categoriaSelecionada) {
 		this.categoriaSelecionada = categoriaSelecionada;
 	}
+	
+	public String getCpf() {
+		return cpf;
+	}
+
+	public void setCpf(String cpf) {
+		this.cpf = cpf;
+	}
+
+	public Integer getTpPagto() {
+		return tpPagto;
+	}
+
+	public void setTpPagto(Integer tpPagto) {
+		this.tpPagto = tpPagto;
+	}
+
+	public Double getValorPago() {
+		return valorPago;
+	}
+
+	public void setValorPago(Double valorPago) {
+		this.valorPago = valorPago;
+	}
 
 	public int getQuantidade() {
 		return quantidade;
@@ -323,12 +366,8 @@ public class PedidosController implements Serializable {
 		this.quantidade = quantidade;
 	}
 
-	public String getCpf() {
-		return cpf;
-	}
-
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
+	public List<FormaPagamento> getPagtos() {
+		return PedidosController.pagtos;
 	}
 
 }

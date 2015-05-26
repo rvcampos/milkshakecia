@@ -30,7 +30,8 @@
 			<p:layout style="min-width:900px;min-height:900px;">
 				<p:layoutUnit position="west" size="30%" id="currentItems">
 					<p:dataTable value="#{pedidosView.produtosSelecionados}"
-						var="prods" id="curr" rendered="#{not empty pedidosView.produtosSelecionados}">
+						var="prods" id="curr"
+						rendered="#{not empty pedidosView.produtosSelecionados}">
 						<p:column headerText="Produto">
 							<h:outputText value="#{prods.printProdutoInfo()}" />
 						</p:column>
@@ -46,7 +47,8 @@
 						<p:column headerText="Valor">
 							<h:outputText value=" ${prods.preco} " />
 							<p:commandLink styleClass="fa fa-remove"
-								action="#{pedidosView.removeProduto(prods)}" update=":form:addData" />
+								action="#{pedidosView.removeProduto(prods)}"
+								update=":form:addData" />
 						</p:column>
 
 						<f:facet name="footer">  
@@ -57,9 +59,9 @@
 								header="Conclusão de Pedido" severity="alert"
 								widgetVar="confirmDialog" appendTo="@(body)">
 								<p:commandButton value="Sim"
-									action="#{pedidosView.confirmaOrdem()}"
+									action="#{pedidosView.confirmaOrdem()}" partialSubmit="false"
 									oncomplete="PF('confirmDialog').hide()" update=":form:addData"
-									process="@this">
+									process="@all">
 								</p:commandButton>
 								<p:commandButton value="Não"
 									onclick="PF('confirmDialog').hide();" type="button" />
@@ -67,11 +69,28 @@
 						</f:facet>
 
 					</p:dataTable>
+					<p />
 					<h:outputLabel for="cpf" value="CPF: " style="font-weight:bold" />
 					<p:inputMask value="${pedidosView.cpf}" id="cpf"
 						mask="999.999.999-99" label="Quantidade" title="Quantidade">
 						<pe:keyFilter regEx="/[0-9_]/i" />
 					</p:inputMask>
+					<p />
+					<p:outputLabel for="console" value="Pagamento: " />
+					<p:selectOneMenu id="console" style="width:125px"
+						value="#{pedidosView.tpPagto}" required="true">
+						<f:selectItems value="#{pedidosView.pagtos}" var="pagto"
+							itemLabel="#{pagto.nome}" itemValue="#{pagto.idPagto}"
+							id="idPagto" />
+					</p:selectOneMenu>
+					<p />
+					<h:outputLabel for="valorPago" value="Recebido: "
+						style="font-weight:bold" />
+					<p:inputText value="${pedidosView.valorPago}" id="valorPago"
+						immediate="true" label="Pago" title="Pago">
+						<pe:keyFilter regEx="/[0-9_]/i" />
+					</p:inputText>
+					<p />
 				</p:layoutUnit>
 
 				<p:layoutUnit position="center">

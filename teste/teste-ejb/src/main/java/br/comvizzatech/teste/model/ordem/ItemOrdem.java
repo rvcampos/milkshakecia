@@ -1,5 +1,6 @@
 package br.comvizzatech.teste.model.ordem;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import br.comvizzatech.teste.model.historico.ItemOrdemHistorico;
+import br.comvizzatech.teste.model.historico.OrdemHistorico;
 
 @Entity
 @Table(name = "item_ordem",schema="milkshakecia")
@@ -90,5 +94,21 @@ public class ItemOrdem {
 		StringBuilder bldr = new StringBuilder();
 		
 		return bldr.toString();
+	}
+
+	public ItemOrdemHistorico criaHistorico(Timestamp date) {
+		ItemOrdemHistorico hist = new ItemOrdemHistorico();
+		hist.setCancelado(cancelado);
+		hist.setDtCriacao(date);
+		hist.setIdCombo(getIdCombo());
+		hist.setIdItemOrdem(idItemOrdem);
+		if(getItemOrdemDet() != null)
+		{
+			for(ItemOrdemDet det:getItemOrdemDet())
+			{
+				hist.addItemOrdemDetHistorico(det.criaHistorico(date));
+			}
+		}
+		return hist;
 	}
 }
