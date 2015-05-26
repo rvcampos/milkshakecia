@@ -21,11 +21,15 @@
 
 	<h:form id="form">
 		<p:layout style="min-width:600px;min-height:600px;">
-			<p:layoutUnit position="west" size="30%">
-				<p:dataTable value="#{mesaStatusView.mesa.getAllItems()}" var="ord"
+			<p:layoutUnit position="west" size="40%">
+				<p:dataTable value="#{mesaStatusView.buildPedidosView()}" var="ord"
 					id="curr">
 					<p:column headerText="Produto">
 						<h:outputText value="#{ord.printProdutoDetalhes()}" />
+					</p:column>
+					<p:column headerText="Valor Un." width="10%"
+						style="text-align:center">
+						<h:outputText value=" #{ord.calculaPrecoProdutoUnit()} " />
 					</p:column>
 					<p:column headerText="Qtd" width="20%" style="text-align:center">
 						<h:outputText value=" #{ord.quantidade} " />
@@ -38,11 +42,11 @@
             				Total: #{pedidosView.totalPedidos()}
             				    <p:commandButton value="Finalizar Pedido"
 							type="button" onclick="PF('confirmDialog').show()" />
-						<p:confirmDialog message="Deseja concluir o pedido?"
+						<p:confirmDialog message="Deseja fechar a mesa"
 							header="Conclusão de Pedido" severity="alert"
 							widgetVar="confirmDialog" appendTo="@(body)">
 							<p:commandButton value="Sim"
-								action="#{pedidosView.confirmaOrdem()}"
+								action="#{mesaStatusView.emiteCupom()}"
 								oncomplete="PF('confirmDialog').hide()" update=":form:curr" />
 							<p:commandButton value="Not Yet"
 								onclick="PF('confirmDialog').hide();" type="button" />
@@ -56,15 +60,14 @@
 
 				<h:messages styleClass="messages" errorClass="invalid"
 					infoClass="valid" warnClass="warning" globalOnly="true" />
-					
-					<p:outputLabel for="console" value="Basic:" />
-        <p:selectOneMenu id="console" value="#{mesaStatusView.formaPagto()}" style="width:125px">
-            <f:selectItem itemLabel="Select One" itemValue="" />
-            <f:selectItem itemLabel="Xbox One" itemValue="Xbox One" />
-            <f:selectItem itemLabel="PS4" itemValue="PS4" />
-            <f:selectItem itemLabel="Wii U" itemValue="Wii U" />
-        </p:selectOneMenu>
-					
+
+				<p:outputLabel for="console" value="Pagamento: " />
+				<p:selectOneMenu id="console" style="width:125px"
+					value="#{mesaStatusView.pgto}" >
+					 <f:selectItems value="#{mesaStatusView.pagtos}" var="pagto"
+						itemLabel="#{pagto.nome}" itemValue="#{pagto.idPagto}" id="idPagto" />
+				</p:selectOneMenu>
+
 			</p:layoutUnit>
 		</p:layout>
 	</h:form>

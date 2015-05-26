@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -24,7 +25,7 @@ import br.comvizzatech.teste.model.ordem.Ordem;
  * 
  */
 @Entity
-@Table(name = "MESA")
+@Table(name = "mesa")
 @NamedQuery(name = "Mesa.findAll", query = "SELECT m FROM Mesa m")
 public class Mesa implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -42,10 +43,6 @@ public class Mesa implements Serializable {
 
 	@Column(name = "STATUS")
 	private Boolean status;
-
-	@OneToMany
-	@JoinColumn(columnDefinition = "id_mesa", referencedColumnName = "id_mesa")
-	private List<Ordem> pedidosMesa;
 
 	public Mesa() {
 	}
@@ -80,28 +77,6 @@ public class Mesa implements Serializable {
 
 	public void setStatus(Boolean status) {
 		this.status = status;
-	}
-
-	public List<Ordem> getPedidosMesa() {
-		return pedidosMesa;
-	}
-
-	public void setPedidosMesa(List<Ordem> pedidosMesa) {
-		this.pedidosMesa = pedidosMesa;
-	}
-
-	public List<ItemOrdemDet> getAllItems() {
-		List<ItemOrdemDet> produtos = new ArrayList<ItemOrdemDet>();
-		if (getPedidosMesa() != null) {
-
-			for (Ordem ordem : getPedidosMesa()) {
-				if(ordem.getStatus() != -1)
-				{
-					produtos.addAll(ordem.getAllItemOrdemDet());
-				}
-			}
-		}
-		return produtos;
 	}
 
 }

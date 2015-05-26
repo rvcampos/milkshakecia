@@ -8,6 +8,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,7 +22,7 @@ import br.comvizzatech.teste.model.historico.OrdemHistorico;
  * 
  */
 @Entity
-@Table(name = "ORDEM")
+@Table(name = "ordem")
 public class Ordem implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -46,11 +47,11 @@ public class Ordem implements Serializable {
 	private Integer tipoPagamento;
 
 	// bi-directional many-to-one association to ItemOrdem
-	@OneToMany(mappedBy = "ordem", cascade = { CascadeType.ALL })
+	@OneToMany(mappedBy = "ordem", cascade = { CascadeType.ALL },fetch=FetchType.EAGER)
 	private List<ItemOrdem> itemOrdems;
-	
+
 	@Column(name="id_mesa")
-	private Integer idMesa;
+	private Integer id_mesa;
 
 	public Ordem() {
 	}
@@ -128,38 +129,33 @@ public class Ordem implements Serializable {
 		return itemOrdem;
 	}
 
-	public Integer getIdMesa() {
-		return idMesa;
-	}
-
-	public void setIdMesa(Integer idMesa) {
-		this.idMesa = idMesa;
-	}
-	
-	public OrdemHistorico criaHistorico(Timestamp date)
-	{
+	public OrdemHistorico criaHistorico(Timestamp date) {
 		OrdemHistorico ordh = new OrdemHistorico();
 		ordh.setDtCriacao(date);
 		ordh.setTipoPagamento(tipoPagamento);
 		ordh.setDataOrdem(dataOrdem);
 		ordh.setIndViagem(indViagem);
-		ordh.setIdMesa(idMesa);
+		ordh.setIdMesa(id_mesa);
 		ordh.setIdOrdem(idOrdem);
 		return ordh;
 	}
-	
-	public List<ItemOrdemDet> getAllItemOrdemDet()
-	{
+
+	public List<ItemOrdemDet> getAllItemOrdemDet() {
 		List<ItemOrdemDet> detalhes = new ArrayList<ItemOrdemDet>();
-		for(ItemOrdem itm : itemOrdems)
-		{
-			if(!itm.getCancelado())
-			{
+		for (ItemOrdem itm : itemOrdems) {
+			if (itm.getCancelado() == null || !itm.getCancelado()) {
 				detalhes.addAll(itm.getItemOrdemDet());
 			}
 		}
 		return detalhes;
 	}
-	
+
+	public Integer getId_mesa() {
+		return id_mesa;
+	}
+
+	public void setId_mesa(Integer id_mesa) {
+		this.id_mesa = id_mesa;
+	}
 
 }

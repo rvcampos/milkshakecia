@@ -30,33 +30,38 @@ import br.comvizzatech.teste.model.produtos.Produto;
 @ApplicationScoped
 public class ProdutoRepository {
 
-    @Inject
-    private EntityManager em;
+	@Inject
+	private EntityManager em;
 
-    public Produto findById(Long id) {
-        return em.find(Produto.class, id.intValue());
-    }
+	public Produto findById(Long id) {
+		return em.find(Produto.class, id.intValue());
+	}
 
-    public Produto findByCategoria(Integer idCategoria) {
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Produto> criteria = cb.createQuery(Produto.class);
-        Root<Produto> member = criteria.from(Produto.class);
-        // Swap criteria statements if you would like to try out type-safe criteria queries, a new
-        // feature in JPA 2.0
-        // criteria.select(member).where(cb.equal(member.get(Member_.name), email));
-        criteria.select(member).where(cb.equal(member.get("categoria").get("idCategoria"), idCategoria));
-        return em.createQuery(criteria).getSingleResult();
-    }
+	public Produto findByCategoria(Integer idCategoria) {
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<Produto> criteria = cb.createQuery(Produto.class);
+		Root<Produto> member = criteria.from(Produto.class);
+		// Swap criteria statements if you would like to try out type-safe
+		// criteria queries, a new
+		// feature in JPA 2.0
+		// criteria.select(member).where(cb.equal(member.get(Member_.name),
+		// email));
+		criteria.select(member).where(
+				cb.equal(member.get("categoria").get("idCategoria"),
+						idCategoria));
+		return em.createQuery(criteria).getSingleResult();
+	}
 
-    public List<Produto> findAllOrderedByName() {
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Produto> criteria = cb.createQuery(Produto.class);
-        Root<Produto> member = criteria.from(Produto.class);
-        // Swap criteria statements if you would like to try out type-safe criteria queries, a new
-        // feature in JPA 2.0
-        // criteria.select(member).orderBy(cb.asc(member.get(Member_.name)));
-        criteria.select(member).orderBy(cb.asc(member.get("nome")));
-        List<Produto> resultList = em.createQuery(criteria).getResultList();
+	public List<Produto> findAllOrderedByName() {
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<Produto> criteria = cb.createQuery(Produto.class);
+		Root<Produto> member = criteria.from(Produto.class);
+		// Swap criteria statements if you would like to try out type-safe
+		// criteria queries, a new
+		// feature in JPA 2.0
+		// criteria.select(member).orderBy(cb.asc(member.get(Member_.name)));
+		criteria.select(member).orderBy(cb.asc(member.get("nome")));
+		List<Produto> resultList = em.createQuery(criteria).getResultList();
 		return resultList;
-    }
+	}
 }

@@ -8,6 +8,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -55,7 +56,7 @@ public class ItemOrdemDet implements Serializable {
 	@Column(name = "QUANTIDADE")
 	private Integer quantidade;
 
-	@OneToMany(mappedBy = "itemOrdemDet",cascade=CascadeType.ALL)
+	@OneToMany(mappedBy = "itemOrdemDet",cascade=CascadeType.ALL,fetch=FetchType.EAGER)
 	private List<ItemOrdemDetAdic> itemDetAdic;
 
 	public ItemOrdemDet() {
@@ -149,7 +150,7 @@ public class ItemOrdemDet implements Serializable {
 			desc.append(" ").append(prdSabor.getSabor().getNome());
 		}
 		
-		if (getItemDetAdic() != null) {
+		if (getItemDetAdic() != null && !getItemDetAdic().isEmpty()) {
 			desc.append(" c/ ");
 			boolean first = true;
 			for(ItemOrdemDetAdic i : getItemDetAdic())
@@ -163,7 +164,60 @@ public class ItemOrdemDet implements Serializable {
 				first = false;
 			}
 		}
-		return detalhe.toString();
+		return desc.toString();
+	}
+	
+	public BigDecimal calculaPrecoProdutoUnit()
+	{
+		return calculaPrecoProdutoUnit(true);
+	}
+	
+	public BigDecimal calculaPrecoProdutoUnit(boolean consideraAdicionais)
+	{
+		BigDecimal dec = BigDecimal.ZERO;
+		if (produto.getPrecoPadrao() != null) {
+			dec = produto.getPrecoPadrao();
+		}
+
+		if (getIdTamanho() != null) {
+			ProdutoTamanho prdTamanho = produto
+					.getTamanhoInfoByTamanhoId(getIdTamanho());
+			if (prdTamanho.getPreco() != null) {
+				dec = prdTamanho.getPreco();
+			}
+		}
+
+		if (getIdSabor() != null) {
+			ProdutoSabor prdSabor = produto.getSaborInfoBySaborId(getIdSabor());
+			if (prdSabor.getPrecoAdicional() != null) {
+				dec = dec.add(prdSabor.getPrecoAdicional());
+			}
+		}
+		if(consideraAdicionais && getItemDetAdic() != null && !getItemDetAdic().isEmpty())
+		{
+			dec = dec.add(getPrecoAdicionais());
+		}
+		return dec;
+	}
+
+	public BigDecimal getPrecoAdicionais() {
+		BigDecimal dec = BigDecimal.ZERO;
+		double qtdAdicionaisCobrados = getQtdAdicionaisCobrados();
+		if(qtdAdicionaisCobrados > 0.0d)
+		{
+			dec = dec.add(produto.getPrecoAdicional().multiply(BigDecimal.valueOf(qtdAdicionaisCobrados)));
+		}
+		return dec;
+	}
+	
+	public double getQtdAdicionaisCobrados() {
+		Short qtdAdIncl = produto.getQtdAdicionalIncluso();
+		double qtd = 0;
+		if(qtdAdIncl < getItemDetAdic().size())
+		{
+			qtd = getItemDetAdic().size() - qtdAdIncl;
+		}
+		return qtd;
 	}
 	
 	public BigDecimal calculaPrecoProduto()
@@ -189,16 +243,26 @@ public class ItemOrdemDet implements Serializable {
 		}
 		if(getItemDetAdic() != null && !getItemDetAdic().isEmpty())
 		{
-			Short qtdAdIncl = produto.getQtdAdicionalIncluso();
-			if(qtdAdIncl < getItemDetAdic().size())
-			{
-				int qtd = getItemDetAdic().size() - qtdAdIncl;
-				dec = dec.add(produto.getPrecoAdicional().multiply(BigDecimal.valueOf(qtd)));
-			}
+			dec = dec.add(getPrecoAdicionais());
 		}
 		dec = dec.multiply(BigDecimal.valueOf(quantidade));
 		
 		return dec;
+	}
+
+	public String getNomeComTamanho() {
+		String nome = produto.getNome();
+		if (produto.getCategoria().getNome().toLowerCase()
+				.equals("milk shakes")) {
+			nome = "Milkshake " + nome;
+		}
+		if(getIdTamanho() != null)
+		{
+			ProdutoTamanho prdTamanho = produto
+					.getTamanhoInfoByTamanhoId(getIdTamanho());
+			nome += " " + prdTamanho.getTamanho().getNome();
+		}
+		return nome;
 	}
 
 }

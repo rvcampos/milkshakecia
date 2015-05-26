@@ -55,7 +55,7 @@ public class DFView {
 		}
 
 		RequestContext.getCurrentInstance().openDialog("viewFechaConta",
-				options, null);
+				options, params);
 	}
 
 }

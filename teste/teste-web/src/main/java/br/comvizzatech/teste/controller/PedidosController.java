@@ -27,6 +27,7 @@ import br.comvizzatech.teste.model.produtos.Produto;
 import br.comvizzatech.teste.model.produtos.ProdutoProdutoAdicional;
 import br.comvizzatech.teste.model.produtos.ProdutoSabor;
 import br.comvizzatech.teste.model.produtos.ProdutoTamanho;
+import br.comvizzatech.teste.service.MesaService;
 import br.comvizzatech.teste.service.OrdemService;
 
 @ManagedBean(name = "pedidosView")
@@ -42,6 +43,9 @@ public class PedidosController implements Serializable {
 
 	@Inject
 	private OrdemService ordemService;
+
+	@Inject
+	private MesaService mesaService;
 
 	private String pageTitle = "BALCÃO";
 
@@ -282,19 +286,18 @@ public class PedidosController implements Serializable {
 			ordem.setDocumentoNota(cpf);
 			setCpf(null);
 			if (this.getIdMesa() != null) {
-				ordem.setIdMesa(Integer.valueOf(this.getIdMesa()));
+				ordem.setId_mesa(Integer.valueOf(this.getIdMesa()));
 			}
 			boolean criaOrdem = ordemService.criaOrdem(ordem);
-			if(criaOrdem)
-			{
+			if (criaOrdem) {
 				facesContext.addMessage(null, new FacesMessage(
-						FacesMessage.SEVERITY_INFO, "Pedido Enviado com sucesso",
+						FacesMessage.SEVERITY_INFO,
+						"Pedido Enviado com sucesso",
 						"Pedido Enviado com sucesso"));
-			}
-			else
-			{
+			} else {
 				facesContext.addMessage(null, new FacesMessage(
-						FacesMessage.SEVERITY_ERROR, "Falha ao realizar pedido, atualize a página",
+						FacesMessage.SEVERITY_ERROR,
+						"Falha ao realizar pedido, atualize a página",
 						"Falha ao realizar pedido, atualize a página"));
 			}
 			produtosSelectionados.clear();

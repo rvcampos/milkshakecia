@@ -1,5 +1,7 @@
 package br.comvizzatech.teste.service;
 
+import java.util.List;
+
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -25,10 +27,16 @@ public class OrdemService {
 				em.persist(ord);
 			}
 		} catch (Exception e) {
-			logger.error("",e);
+			logger.error("", e);
 			return false;
 		}
 		return true;
 	}
 
+	public List<Ordem> getOrdensByMesa(Integer mesaId) {
+		return em
+				.createQuery(
+						"select o from Ordem o where o.id_mesa = :idMesa")
+				.setParameter("idMesa", mesaId).getResultList();
+	}
 }
